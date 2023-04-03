@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('trip_packages', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('created_by');
-            $table->string('level');
+            $table->enum('type',['open','private']);
             $table->bigInteger('destination_id');
             $table->bigInteger('guide_id');
             $table->integer('duration');
