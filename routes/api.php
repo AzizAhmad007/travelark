@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\GuideController;
 use App\Http\Controllers\CitiController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -20,6 +21,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::post('guide', [GuideController::class, 'store']);
+Route::get('guide', [GuideController::class, 'index']);
+Route::put('guide/{id}', [GuideController::class, 'update']);
+Route::delete('guide/{id}', [GuideController::class, 'destroy']);
 Route::get('/province', [ControllersProvinceController::class, 'getProvince']);
 Route::get('/city',  [CitiController::class, 'index']);
-
