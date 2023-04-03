@@ -13,17 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('tickets', function (Blueprint $table) {
+        Schema::create('instant_travels', function (Blueprint $table) {
             $table->id();
-            $table->string('first_name');
-            $table->string('last_name');
-            $table->bigInteger('user_id');
-            $table->string('email');
-            $table->string('phone');
-            $table->longText('message');
+            $table->foreignId('user_id')->references('id')->on('users');
+
+            $table->foreignId('palace_id')->references('id')->on('palaces');
+            $table->integer('quota');
             $table->timestamps();
 
-            $table->foreign('user_id')->references('id')->on('users');
+         
         });
     }
 
@@ -34,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tickets');
+        Schema::dropIfExists('instant_travels');
     }
 };

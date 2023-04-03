@@ -15,17 +15,17 @@ return new class extends Migration
     {
         Schema::create('detail_packages', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('user_id');
+            $table->foreignId('user_id')->references('id')->on('users');
+            $table->foreignId('trip_packages_id')->references('id')->on('trip_packages');
             $table->longText('desciption');
             $table->integer('quota');
             $table->dateTime('departure_time');
             $table->double('total_price');
-            $table->bigInteger('trip_packages_id');
             $table->timestamps();
 
-            $table->foreign('user_id')->references('id')->on('users');
+           
 
-            $table->foreign('trip_packages_id')->references('id')->on('trip_packages');
+            
         });
     }
 
