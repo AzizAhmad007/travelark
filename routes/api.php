@@ -1,8 +1,11 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\GuideController;
+use App\Http\Controllers\CitiController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProvinceController as ControllersProvinceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,3 +34,10 @@ Route::group([
     Route::post('logout', [AuthController::class, 'logout']);
 
 });
+
+Route::post('guide', [GuideController::class, 'store']);
+Route::get('guide', [GuideController::class, 'index']);
+Route::put('guide/{id}', [GuideController::class, 'update']);
+Route::delete('guide/{id}', [GuideController::class, 'destroy']);
+Route::get('/province', [ControllersProvinceController::class, 'getProvince']);
+Route::get('/city',  [CitiController::class, 'index']);
