@@ -15,26 +15,22 @@ return new class extends Migration
     {
         Schema::create('palaces', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('user_id');
-            $table->bigInteger('tag_id');
-            $table->bigInteger('country_id');
-            $table->bigInteger('city_id');
-            $table->bigInteger('province_id');
+            $table->foreignId('user_id')->references('id')->on('users');
+
+            $table->foreignId('tag_id')->references('id')->on('tags');
+
+            $table->foreignId('country_id')->references('id')->on('countries');
+
+            $table->foreignId('city_id')->references('id')->on('cities');
+
+            $table->foreignId('province_id')->references('id')->on('provinces');
             $table->string('palace_name');
             $table->string('image');
             $table->double('price');
             $table->longText('description');
             $table->timestamps();
 
-            $table->foreign('user_id')->references('id')->on('users');
-
-            $table->foreign('tag_id')->references('id')->on('tags');
-
-            $table->foreign('country_id')->references('id')->on('countries');
-
-            $table->foreign('city_id')->references('id')->on('cities');
-
-            $table->foreign('province_id')->references('id')->on('provinces');
+            
         });
     }
 

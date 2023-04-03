@@ -15,15 +15,15 @@ return new class extends Migration
     {
         Schema::create('trip_packages', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('created_by');
+            $table->foreignId('created_by')->references('id')->on('users');
+            $table->foreignId('destination_id')->references('id')->on('destinations');
+            $table->foreignId('guide_id')->references('id')->on('guides');
             $table->enum('type',['open','private']);
-            $table->bigInteger('destination_id');
-            $table->bigInteger('guide_id');
             $table->integer('duration');
             $table->double('price');
             $table->timestamps();
 
-            $table->foreign('destination_id')->references('id')->on('destinations');
+            
         });
     }
 
