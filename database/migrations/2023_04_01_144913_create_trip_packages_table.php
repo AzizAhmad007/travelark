@@ -24,8 +24,6 @@ return new class extends Migration
             $table->timestamps();
 
             $table->foreign('destination_id')->references('id')->on('destinations');
-
-            $table->foreign('guide_id')->references('id')->on('guides');
         });
     }
 

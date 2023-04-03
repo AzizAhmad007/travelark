@@ -21,6 +21,7 @@ return new class extends Migration
             $table->bigInteger('city_id');
             $table->bigInteger('province_id');
             $table->string('palace_name');
+            $table->string('image');
             $table->double('price');
             $table->longText('description');
             $table->timestamps();
