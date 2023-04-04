@@ -42,7 +42,7 @@ Route::post('guide', [GuideController::class, 'store']);
 Route::post('palace', [PalaceController::class, 'store']);
 Route::get('palace', [PalaceController::class, 'index']);
 Route::get('palace/{id}', [PalaceController::class, 'show']);
-Route::put('palace/{id}', [PalaceController::class, 'update']);
+Route::post('palace/{id}', [PalaceController::class, 'update']);
 Route::delete('palace/{id}', [PalaceController::class, 'delete']);
 Route::get('guide', [GuideController::class, 'index']);
 Route::put('guide/{id}', [GuideController::class, 'update']);
