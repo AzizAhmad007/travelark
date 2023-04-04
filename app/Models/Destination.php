@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 
 class Destination extends Model
@@ -47,5 +48,12 @@ class Destination extends Model
     public function getprovince()
     {
         return $this->belongsTo(Province::class, 'province_id', 'id');
+    }
+
+    protected function image(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => asset('/storage/destinations/' . $value),
+        );
     }
 }
