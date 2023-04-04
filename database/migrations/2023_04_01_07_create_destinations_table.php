@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('destinations', function (Blueprint $table) {
             $table->id();
-             $table->foreignId('user_id')->references('id')->on('users');
+            $table->foreignId('user_id')->references('id')->on('users');
 
             $table->foreignId('tag_id')->references('id')->on('tags');
 
@@ -31,7 +31,7 @@ return new class extends Migration
             $table->double('private_price');
             $table->timestamps();
 
-           
+
         });
     }
 
