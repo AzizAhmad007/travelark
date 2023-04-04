@@ -3,9 +3,12 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GuideController;
 use App\Http\Controllers\CitiController;
+use App\Http\Controllers\CountryController;
+use App\Http\Controllers\PalaceController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProvinceController as ControllersProvinceController;
+use App\Http\Controllers\TagController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,8 +39,15 @@ Route::group([
 });
 
 Route::post('guide', [GuideController::class, 'store']);
+Route::post('palace', [PalaceController::class, 'store']);
+Route::get('palace', [PalaceController::class, 'index']);
+Route::get('palace/{id}', [PalaceController::class, 'show']);
+Route::put('palace/{id}', [PalaceController::class, 'update']);
+Route::delete('palace/{id}', [PalaceController::class, 'delete']);
 Route::get('guide', [GuideController::class, 'index']);
 Route::put('guide/{id}', [GuideController::class, 'update']);
 Route::delete('guide/{id}', [GuideController::class, 'destroy']);
 Route::get('/province', [ControllersProvinceController::class, 'getProvince']);
 Route::get('/city',  [CitiController::class, 'index']);
+Route::get('/country',  [CountryController::class, 'index']);
+Route::get('/tags',  [TagController::class, 'index']);
