@@ -18,5 +18,7 @@ class DatabaseSeeder extends Seeder
         $this->call(ProvinceSeeder::class);
         // \App\Models\User::factory(10)->create();
         $this->call(CitiSeeder::class);
+        $this->call(CountriesSeeder::class);
+        $this->call(TagsSeeder::class);
     }
 }

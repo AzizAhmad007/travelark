@@ -25,7 +25,7 @@ return new class extends Migration
 
             $table->foreignId('province_id')->references('id')->on('provinces');
             $table->string('palace_name');
-            $table->string('image');
+            $table->text('image');
             $table->double('price');
             $table->longText('description');
             $table->timestamps();
