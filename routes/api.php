@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProvinceController as ControllersProvinceController;
 use App\Http\Controllers\TagController;
+use App\Http\Controllers\TicketController;
 
 /*
 |--------------------------------------------------------------------------
@@ -51,3 +52,6 @@ Route::get('/province', [ControllersProvinceController::class, 'getProvince']);
 Route::get('/city',  [CitiController::class, 'index']);
 Route::get('/country',  [CountryController::class, 'index']);
 Route::get('/tags',  [TagController::class, 'index']);
+Route::get('/ticket', [TicketController::class, 'index']);
+Route::get('ticket/{id}', [TicketController::class, 'show']);
+Route::put('ticket/{id}', [TicketController::class, 'update']);
