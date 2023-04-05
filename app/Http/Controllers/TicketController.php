@@ -45,31 +45,11 @@ class TicketController extends Controller
             ]);
         }
     }
-    public function update(Request $request, Ticket $ticket)
-    {
-        try {
-            $isValidateData = $request->validate([
-                "name" => 'required',
-            ]);
-            $ticket->update($isValidateData);
-            return response()->json([
-                "message" => "success",
-                'statusCode' => 200,
-                "data" => $isValidateData,
-            ]);
-        } catch (\Throwable $th) {
-            return response()->json([
-                "message" => $th->getMessage(),
-                'statusCode' => 400,
-                "data" => null
-            ]);
-        }
-    }
     public function show($id)
     {
         try {
             $ticket = Ticket::find($id);
-            if($ticket == null){
+            if ($ticket == null) {
                 throw new Exception('Data tidak ditemukan');
             }
             return $ticket;
@@ -81,10 +61,27 @@ class TicketController extends Controller
         } catch (Exception $e) {
             return response()->json([
                 'message' => $e,
-                'error' => 'Data tidak ditemukan',
                 'statusCode' => 400,
                 'data' => null
             ]);
         }
+    }
+    public function delete($id)
+    {
+        try {
+            $getData = Ticket::find($id);
+            Ticket::where('id', $id)->delete();
+            return response()->json([
+                "message" => "success",
+                'statusCode' => 200,
+                'data' => $getData
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                "message" => $th->getMessage(),
+                'statusCode' => 400,
+                'data' => null
+            ]);
         }
     }
+}
