@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProvinceController as ControllersProvinceController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\TripPackageController;
+use App\Http\Controllers\TicketController;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,7 +44,7 @@ Route::post('guide', [GuideController::class, 'store']);
 Route::post('palace', [PalaceController::class, 'store']);
 Route::get('palace', [PalaceController::class, 'index']);
 Route::get('palace/{id}', [PalaceController::class, 'show']);
-Route::put('palace/{id}', [PalaceController::class, 'update']);
+Route::post('palace/{id}', [PalaceController::class, 'update']);
 Route::delete('palace/{id}', [PalaceController::class, 'delete']);
 Route::get('guide', [GuideController::class, 'index']);
 Route::put('guide/{id}', [GuideController::class, 'update']);
@@ -58,3 +59,9 @@ Route::get('/trip-package/{id}',  [TripPackageController::class, 'show']);
 Route::post('/trip-package',  [TripPackageController::class, 'store']);
 Route::put('/trip-package/{id}',  [TripPackageController::class, 'update']);
 Route::delete('/trip-package/{id}',  [TripPackageController::class, 'delete']);
+
+Route::get('/ticket', [TicketController::class, 'index']);
+Route::post('/ticket', [TicketController::class, 'store']);
+Route::get('ticket/{id}', [TicketController::class, 'show']);
+Route::delete('ticket/{id}', [TicketController::class, 'delete']);
+

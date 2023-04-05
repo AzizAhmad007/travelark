@@ -74,7 +74,7 @@ class PalaceController extends Controller
         }
     }
 
-    public function update(Request $request, Palace $palace)
+    public function update(Request $request, $id)
     {
         try {
             $isValidateData = $request->validate([
@@ -88,13 +88,24 @@ class PalaceController extends Controller
                 "price" => 'required||numeric',
                 "description" => 'required|min:2',
             ]);
+             $getData = Palace::find($id);
             $image = $request->file('image');
             $imageName = Str::random(40) . '.' . $image->getClientOriginalExtension();
-            $path = 'public/images/' . $isValidateData['image'];
+            $path = 'public/images/' . $getData->image;
             Storage::delete($path);
             $image->storeAs('public/images', $imageName);
             $isValidateData['image'] = $imageName;
-            $palace->update($isValidateData);
+            $getData->user_id = $isValidateData["user_id"];
+            $getData->tag_id = $isValidateData["tag_id"];
+            $getData->country_id = $isValidateData["country_id"];
+            $getData->city_id = $isValidateData["city_id"];
+            $getData->province_id = $isValidateData["province_id"];         
+            $getData->user_id = $isValidateData["user_id"];
+            $getData->palace_name = $isValidateData["palace_name"];
+            $getData->image =  $imageName;
+            $getData->price = $isValidateData["price"];
+            $getData->description = $isValidateData["description"];
+            $getData->save();
             return response()->json([
                 "message" => "success",
                 'statusCode' => 200,
