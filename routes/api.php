@@ -4,6 +4,7 @@
 use App\Http\Controllers\DestinationController;
 use App\Http\Controllers\Destination_detailController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DetailPackageController;
 use App\Http\Controllers\GuideController;
 use App\Http\Controllers\CitiController;
 use App\Http\Controllers\CountryController;
@@ -82,11 +83,11 @@ Route::group([
 ], function ($router) {
 
 
-    Route::get('/instant-travel',  [Instant_travelerController::class, 'index']);
-    Route::get('/instant-travel/{id}',  [Instant_travelerController::class, 'show']);
-    Route::post('/instant-travel',  [Instant_travelerController::class, 'store']);
-    Route::put('/instant-travel/{id}',  [Instant_travelerController::class, 'update']);
-    Route::delete('/instant-travel/{id}',  [Instant_travelerController::class, 'delete']);
+    Route::get('/instant-travel', [Instant_travelerController::class, 'index']);
+    Route::get('/instant-travel/{id}', [Instant_travelerController::class, 'show']);
+    Route::post('/instant-travel', [Instant_travelerController::class, 'store']);
+    Route::put('/instant-travel/{id}', [Instant_travelerController::class, 'update']);
+    Route::delete('/instant-travel/{id}', [Instant_travelerController::class, 'delete']);
 });
 Route::group([
 
@@ -95,11 +96,11 @@ Route::group([
 ], function ($router) {
 
 
-    Route::get('/trip-package',  [TripPackageController::class, 'index']);
-    Route::get('/trip-package/{id}',  [TripPackageController::class, 'show']);
-    Route::post('/trip-package',  [TripPackageController::class, 'store']);
-    Route::put('/trip-package/{id}',  [TripPackageController::class, 'update']);
-    Route::delete('/trip-package/{id}',  [TripPackageController::class, 'delete']);
+    Route::get('/trip-package', [TripPackageController::class, 'index']);
+    Route::get('/trip-package/{id}', [TripPackageController::class, 'show']);
+    Route::post('/trip-package', [TripPackageController::class, 'store']);
+    Route::put('/trip-package/{id}', [TripPackageController::class, 'update']);
+    Route::delete('/trip-package/{id}', [TripPackageController::class, 'delete']);
 });
 Route::group([
 
@@ -127,11 +128,19 @@ Route::group([
     Route::put('/destination-detail/{id}', [Destination_detailController::class, 'update']);
     Route::delete('/destination-detail/{id}', [Destination_detailController::class, 'destroy']);
 });
-
+Route::group([
+    'prefix' => 'detail-package'
+], function ($router) {
+    Route::get('/list-detail-package', [DetailPackageController::class, 'index']);
+    Route::get('/search-detail-package/{id}', [DetailPackageController::class, 'show']);
+    Route::post('/insert-detail-package', [DetailPackageController::class, 'store']);
+    Route::put('/update-detail-package/{id}', [DetailPackageController::class, 'update']);
+    Route::delete('/delete-detail-package/{id}', [DetailPackageController::class, 'delete']);
+});
 
 
 
 Route::get('/province', [ControllersProvinceController::class, 'getProvince']);
-Route::get('/city',  [CitiController::class, 'index']);
-Route::get('/country',  [CountryController::class, 'index']);
-Route::get('/tags',  [TagController::class, 'index']);
+Route::get('/city', [CitiController::class, 'index']);
+Route::get('/country', [CountryController::class, 'index']);
+Route::get('/tags', [TagController::class, 'index']);

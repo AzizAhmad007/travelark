@@ -13,8 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('trip_packages', function (Blueprint $table) {
+        Schema::create('detail_packages', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->references('id')->on('users');
+            $table->longText('description');
+            $table->integer('quota');
+            $table->dateTime('departure_time');
+            $table->double('total_price');
+            $table->foreignId('trip_package_id')->references('id')->on('trip_package');
             $table->timestamps();
         });
     }
@@ -26,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('trip_packages');
+        Schema::dropIfExists('detail_packages');
     }
 };
