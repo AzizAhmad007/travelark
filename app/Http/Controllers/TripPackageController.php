@@ -21,7 +21,7 @@ class TripPackageController extends Controller
 
                 $dataTransform[] = [
                     "id" => $value->id,
-                    "created_id" => $value->user->fullname,
+                    "created_by" => $value->user->fullname,
                     "type" => $value->type,
                     "destination_id" =>$value->destination->name,
                     "guide_id" => $value->guide->name,
@@ -62,7 +62,26 @@ class TripPackageController extends Controller
     public function store(StoreTripPackageRequest $request)
     {
         try {
-            $isValidateData =
+            $isValidateData = $request->validate([
+                "created_by" => 'required|numeric',
+                "type" => 'required',
+                "destination_id" => 'required',
+                "guide_id" => 'required',
+                "duration" => 'required',
+                "price" => 'required|min:3|max:100',
+            ]);
+            TripPackage::create($isValidateData);
+            return response()->json([
+                "message" => "success",
+                'statusCode' => 200,
+                "data" => $isValidateData,
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                "message" => $th->getMessage(),
+                'statusCode' => 400,
+                "data" => null
+            ]);
         }
     }
 
@@ -72,9 +91,31 @@ class TripPackageController extends Controller
      * @param  \App\Models\TripPackage  $tripPackage
      * @return \Illuminate\Http\Response
      */
-    public function show(TripPackage $tripPackage)
+    public function show($id)
     {
-        //
+         $checkData  = TripPackage::find($id);
+        if (!$checkData == []) {
+            $setData = [
+                    "id" => $checkData->id,
+                    "created_by" => $checkData->user->fullname,
+                    "type" => $checkData->type,
+                    "destination_id" =>$checkData->destination->name,
+                    "guide_id" => $checkData->guide->name,
+                    "duration" =>  $checkData->duration,
+                    "price" => $checkData->price
+            ];
+            return response()->json([
+                "message" => "success",
+                'statusCode' => 200,
+                "data" => $setData
+            ]);
+        } else {
+            return response()->json([
+                "message" => 'error data tidak di temukan',
+                'statusCode' => 404,
+                "data" => null
+            ]);
+        }
     }
 
     /**
@@ -95,9 +136,37 @@ class TripPackageController extends Controller
      * @param  \App\Models\TripPackage  $tripPackage
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateTripPackageRequest $request, TripPackage $tripPackage)
+    public function update(UpdateTripPackageRequest $request, $id)
     {
-        //
+        try {
+            $isValidateData = $request->validate([
+               "created_by" => 'required|numeric',
+                "type" => 'required',
+                "destination_id" => 'required',
+                "guide_id" => 'required',
+                "duration" => 'required',
+                "price" => 'required|min:3|max:100',
+            ]);
+            $getData = TripPackage::find($id);
+            $getData->created_by = $isValidateData["created_by"];
+            $getData->type = $isValidateData["type"];
+            $getData->destination_id = $isValidateData["destination_id"];
+            $getData->guide_id = $isValidateData["guide_id"];
+            $getData->duration = $isValidateData["duration"];         
+            $getData->price = $isValidateData["price"];
+            $getData->save();
+            return response()->json([
+                "message" => "success",
+                'statusCode' => 200,
+                "data" => $isValidateData,
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                "message" => $th->getMessage(),
+                'statusCode' => 400,
+                "data" => null
+            ]);
+        }
     }
 
     /**
@@ -106,8 +175,22 @@ class TripPackageController extends Controller
      * @param  \App\Models\TripPackage  $tripPackage
      * @return \Illuminate\Http\Response
      */
-    public function destroy(TripPackage $tripPackage)
+    public function destroy($id)
     {
-        //
+         try {
+            $getData = TripPackage::find($id);
+            TripPackage::where('id', $id)->delete();
+            return response()->json([
+                "message" => "success",
+                'statusCode' => 200,
+                'data' => $getData
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                "message" => $th->getMessage(),
+                'statusCode' => 400,
+                'data' => null
+            ]);
+        }
     }
 }

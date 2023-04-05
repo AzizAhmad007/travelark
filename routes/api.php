@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProvinceController as ControllersProvinceController;
 use App\Http\Controllers\TagController;
+use App\Http\Controllers\TripPackageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -51,3 +52,9 @@ Route::get('/province', [ControllersProvinceController::class, 'getProvince']);
 Route::get('/city',  [CitiController::class, 'index']);
 Route::get('/country',  [CountryController::class, 'index']);
 Route::get('/tags',  [TagController::class, 'index']);
+
+Route::get('/trip-package',  [TripPackageController::class, 'index']);
+Route::get('/trip-package/{id}',  [TripPackageController::class, 'show']);
+Route::post('/trip-package',  [TripPackageController::class, 'store']);
+Route::put('/trip-package/{id}',  [TripPackageController::class, 'update']);
+Route::delete('/trip-package/{id}',  [TripPackageController::class, 'delete']);
