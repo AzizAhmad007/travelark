@@ -11,6 +11,10 @@ use Illuminate\Support\Str;
 
 class DestinationController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:api', ['except' => ['login', 'register']]);
+    }
     public function index()
     {
         $destination = Destination::all();
