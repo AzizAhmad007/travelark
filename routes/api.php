@@ -37,11 +37,14 @@ Route::prefix('logged')->middleware('auth')->group(function () {
         Route::put('/update-destination/{id}', [DestinationController::class, 'update']);
         Route::get('/destination/{id}', [DestinationController::class, 'show']);
         Route::get('/destination', [DestinationController::class, 'index']);
-        Route::delete('/delete-destination/{id}', [Destination::class, 'destroy']);
+        Route::delete('/delete-destination/{id}', [DestinationController::class, 'destroy']);
 
         //---------------------------Destination_detail----------------------
         Route::get('/destination-detail', [Destination_detailController::class, 'index']);
         Route::get('/destination-detail/{id}', [Destination_detailController::class, 'show']);
+        Route::post('/destination-detail', [Destination_detailController::class, 'store']);
+        Route::put('/destination-detail/{id}', [Destination_detailController::class, 'update']);
+        Route::delete('/destination-detail/{id}', [Destination_detailController::class, 'destroy']);
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //     return $request->user();
 // });
