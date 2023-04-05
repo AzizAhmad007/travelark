@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GuideController;
 use App\Http\Controllers\CitiController;
 use App\Http\Controllers\CountryController;
+use App\Http\Controllers\Instant_travelerController;
 use App\Http\Controllers\PalaceController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -64,4 +65,10 @@ Route::get('/ticket', [TicketController::class, 'index']);
 Route::post('/ticket', [TicketController::class, 'store']);
 Route::get('ticket/{id}', [TicketController::class, 'show']);
 Route::delete('ticket/{id}', [TicketController::class, 'delete']);
+
+Route::get('/instant-travel',  [Instant_travelerController::class, 'index']);
+Route::get('/instant-travel/{id}',  [Instant_travelerController::class, 'show']);
+Route::post('/instant-travel',  [Instant_travelerController::class, 'store']);
+Route::put('/instant-travel/{id}',  [Instant_travelerController::class, 'update']);
+Route::delete('/instant-travel/{id}',  [Instant_travelerController::class, 'delete']);
 
