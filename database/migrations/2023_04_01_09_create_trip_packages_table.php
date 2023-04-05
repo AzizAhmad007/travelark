@@ -22,8 +22,6 @@ return new class extends Migration
             $table->integer('duration');
             $table->double('price');
             $table->timestamps();
-
-            
         });
     }
 
