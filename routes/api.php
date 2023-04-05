@@ -15,6 +15,7 @@ use App\Http\Controllers\ProvinceController as ControllersProvinceController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\TripPackageController;
 use App\Http\Controllers\TicketController;
+use App\Http\Controllers\Trip_AcomodationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -127,7 +128,18 @@ Route::group([
     Route::put('/destination-detail/{id}', [Destination_detailController::class, 'update']);
     Route::delete('/destination-detail/{id}', [Destination_detailController::class, 'destroy']);
 });
+Route::group([
 
+    'prefix' => 'trip-acomodation'
+
+], function ($router) {
+
+    Route::get('trip-acomodation', [Trip_AcomodationController::class, 'index']);
+    Route::get('trip-acomodation/{id}', [Trip_AcomodationController::class, 'show']);
+    Route::put('trip-acomodation/{id}', [Trip_AcomodationController::class, 'update']);
+    Route::delete('trip-acomodation/{id}', [Trip_AcomodationController::class, 'destroy']);
+    Route::post('trip-acomodation', [Trip_AcomodationController::class, 'store']);
+});
 
 
 
