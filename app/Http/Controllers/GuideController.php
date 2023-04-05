@@ -7,6 +7,11 @@ use Illuminate\Http\Request;
 
 class GuideController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth:api', ['except' => ['login', 'register']]);
+    }
     /**
      * Display a listing of the resource.
      *

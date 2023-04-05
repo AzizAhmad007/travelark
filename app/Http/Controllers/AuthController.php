@@ -28,7 +28,6 @@ class AuthController extends Controller
             'fullname' => 'required|min:5|max:40',
             'password' => 'required|min:3|max:30',
             'phone' => 'required|max:13',
-            'level' => 'required|in:traveler,admin',
         ]);
 
         if ($validator->fails()) {
@@ -41,7 +40,7 @@ class AuthController extends Controller
             'fullname' => request('fullname'),
             'password' => Hash::make(request('password')),
             'phone' => request('phone'),
-            'level' => request('level'),
+            'level' => "traveler",
         ]);
 
         if ($user) {
@@ -106,11 +105,18 @@ class AuthController extends Controller
      */
     protected function respondWithToken($token)
     {
+        $dataUser = [
+            "username" => auth()->user()->username,
+            "email" => auth()->user()->email,
+            "fullname" => auth()->user()->fullname,
+            "phone" => auth()->user()->phone,
+            "level" => auth()->user()->level
+        ];
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
             'expires_in' => auth()->factory()->getTTL() * 60,
-            'data' => auth()->user()
+            'data' => $dataUser
         ]);
     }
 }

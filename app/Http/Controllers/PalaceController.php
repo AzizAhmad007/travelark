@@ -9,6 +9,10 @@ use Illuminate\Support\Str;
 
 class PalaceController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:api', ['except' => ['login', 'register']]);
+    }
     public function index()
     {
         try {
@@ -100,7 +104,6 @@ class PalaceController extends Controller
             $getData->country_id = $isValidateData["country_id"];
             $getData->city_id = $isValidateData["city_id"];
             $getData->province_id = $isValidateData["province_id"];         
-            $getData->user_id = $isValidateData["user_id"];
             $getData->palace_name = $isValidateData["palace_name"];
             $getData->image =  $imageName;
             $getData->price = $isValidateData["price"];

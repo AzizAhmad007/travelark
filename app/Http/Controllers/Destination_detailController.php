@@ -9,6 +9,10 @@ use Exception;
 
 class Destination_detailController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:api', ['except' => ['login', 'register']]);
+    }
     public function index()
     {
         $destination_detail = Destination_detail::all();

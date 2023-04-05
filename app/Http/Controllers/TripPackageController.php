@@ -8,6 +8,10 @@ use App\Http\Requests\UpdateTripPackageRequest;
 
 class TripPackageController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:api', ['except' => ['login', 'register']]);
+    }
     /**
      * Display a listing of the resource.
      *
