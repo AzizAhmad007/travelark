@@ -18,7 +18,7 @@ class Instant_travelerController extends Controller
                 $dataTransform[] = [
                     "id" => $value->id,
                     "user_id" => $value->user->fullname,
-                    "palace_id" => $value->palace->name,
+                    "palace_id" => $value->palace->palace_name,
                     "quota" => $value->quota,
                 ];
             }
@@ -43,7 +43,7 @@ class Instant_travelerController extends Controller
                 "palace_id" => 'required|numeric',
                 "quota" => 'required|numeric',
             ]);
-
+            InstantTravelModel::create($isValidateData);
             return response()->json([
                 "message" => "success",
                 'statusCode' => 200,
@@ -66,7 +66,11 @@ class Instant_travelerController extends Controller
                 "palace_id" => 'required|numeric',
                 "quota" => 'required|numeric',
             ]);
-
+            $getData = InstantTravelModel::find($id);
+            $getData->user_id = $isValidateData["user_id"];
+            $getData->palace_id = $isValidateData["palace_id"];
+            $getData->quota = $isValidateData["quota"];
+            $getData->save();
             return response()->json([
                 "message" => "success",
                 'statusCode' => 200,
@@ -85,9 +89,7 @@ class Instant_travelerController extends Controller
     {
         try {
             $getData = InstantTravelModel::find($id);
-            Palace::where('id', $id)->delete();
-             $path = 'public/images/' . $getData->image;
-            Storage::delete($path);
+            InstantTravelModel::where('id', $id)->delete();
             return response()->json([
                 "message" => "success",
                 'statusCode' => 200,
@@ -104,13 +106,13 @@ class Instant_travelerController extends Controller
 
     public function show($id)
     {
-        $checkData  = Palace::find($id);
+        $checkData  = InstantTravelModel::find($id);
         if (!$checkData == []) {
             $setData = [
                 "id" => $checkData->id,
                 "user_id" => $checkData->user->fullname,
-                "palace_id" => $checkData->palace->name,
-                "quota" => $checkData->quota->name,
+                "palace_id" => $checkData->palace->palace_name,
+                "quota" => $checkData->quota,
             ];
             return response()->json([
                 "message" => "success",
