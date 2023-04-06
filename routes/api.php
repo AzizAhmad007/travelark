@@ -4,6 +4,7 @@
 use App\Http\Controllers\DestinationController;
 use App\Http\Controllers\Destination_detailController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DetailPackageController;
 use App\Http\Controllers\GuideController;
 use App\Http\Controllers\CitiController;
 use App\Http\Controllers\CountryController;
@@ -82,7 +83,6 @@ Route::group([
 
 ], function ($router) {
 
-
     Route::get('/instant-travel',  [Instant_travelerController::class, 'index']);
     Route::get('/instant-travel/{id}',  [Instant_travelerController::class, 'show'])->middleware('IsAdmin');
     Route::post('/instant-travel',  [Instant_travelerController::class, 'store'])->middleware('IsAdmin');
@@ -91,7 +91,7 @@ Route::group([
 });
 Route::group([
 
-    'prefix' => 'instant-travel'
+    'prefix' => 'trip-package'
 
 ], function ($router) {
 
@@ -128,8 +128,20 @@ Route::group([
     Route::put('/destination-detail/{id}', [Destination_detailController::class, 'update'])->middleware('IsAdmin');
     Route::delete('/destination-detail/{id}', [Destination_detailController::class, 'destroy'])->middleware('IsAdmin');
 });
-Route::group([
 
+
+Route::group([
+    'prefix' => 'detail-package'
+], function ($router) {
+    Route::get('/list-detail-package', [DetailPackageController::class, 'index']);
+    Route::get('/search-detail-package/{id}', [DetailPackageController::class, 'show']);
+    Route::post('/insert-detail-package', [DetailPackageController::class, 'store']);
+    Route::put('/update-detail-package/{id}', [DetailPackageController::class, 'update']);
+    Route::delete('/delete-detail-package/{id}', [DetailPackageController::class, 'delete']);
+});
+
+
+Route::group([
     'prefix' => 'trip-acomodation'
 
 ], function ($router) {
@@ -144,6 +156,6 @@ Route::group([
 
 
 Route::get('/province', [ControllersProvinceController::class, 'getProvince']);
-Route::get('/city',  [CitiController::class, 'index']);
-Route::get('/country',  [CountryController::class, 'index']);
-Route::get('/tags',  [TagController::class, 'index']);
+Route::get('/city', [CitiController::class, 'index']);
+Route::get('/country', [CountryController::class, 'index']);
+Route::get('/tags', [TagController::class, 'index']);
