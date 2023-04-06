@@ -43,7 +43,13 @@ class DetailPackageController extends Controller
     public function show($id)
     {
         $data = DetailPackage::find($id);
-        return $data;
+        if ($data === null || $data === []) {
+            return response()->json([
+                'message' => 'data not found'
+            ]);
+        } else {
+            return $data;
+        }
     }
 
     public function update(Request $request, $id)
