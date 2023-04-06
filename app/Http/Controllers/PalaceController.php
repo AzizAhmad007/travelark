@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Responses\Responses;
 use App\Models\Palace;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -47,6 +48,7 @@ class PalaceController extends Controller
     }
     public function store(Request $request)
     {
+         $response = new Responses;
         try {
             $isValidateData = $request->validate([
                 "user_id" => 'required|numeric',
@@ -64,22 +66,15 @@ class PalaceController extends Controller
             $image->storeAs('public/palaces', $imageName);
             $isValidateData['image'] = $imageName;
             Palace::create($isValidateData);
-            return response()->json([
-                "message" => "success",
-                'statusCode' => 200,
-                "data" => $isValidateData,
-            ]);
+            return $response->Response("success", $isValidateData, 200);
         } catch (\Throwable $th) {
-            return response()->json([
-                "message" => $th->getMessage(),
-                'statusCode' => 400,
-                "data" => null
-            ]);
+            return $response->Response($th->getMessage(), null, 400);
         }
     }
 
     public function update(Request $request, $id)
     {
+        $response = new Responses;
         try {
             $isValidateData = $request->validate([
                 "user_id" => 'required|numeric',
@@ -109,43 +104,29 @@ class PalaceController extends Controller
             $getData->price = $isValidateData["price"];
             $getData->description = $isValidateData["description"];
             $getData->save();
-            return response()->json([
-                "message" => "success",
-                'statusCode' => 200,
-                "data" => $isValidateData,
-            ]);
+            return $response->Response("success", $isValidateData, 200);
         } catch (\Throwable $th) {
-            return response()->json([
-                "message" => $th->getMessage(),
-                'statusCode' => 400,
-                "data" => null
-            ]);
+           return $response->Response($th->getMessage(), null, 400);
         }
     }
 
     public function delete($id)
     {
+        $response = new Responses;
         try {
             $getData = Palace::find($id);
             Palace::where('id', $id)->delete();
              $path = 'public/palaces/' . $getData->image;
             Storage::delete($path);
-            return response()->json([
-                "message" => "success",
-                'statusCode' => 200,
-                'data' => $getData
-            ]);
+           return $response->Response("success", $getData, 200);
         } catch (\Throwable $th) {
-            return response()->json([
-                "message" => $th->getMessage(),
-                'statusCode' => 400,
-                'data' => null
-            ]);
+           return $response->Response($th->getMessage(), null, 400);
         }
     }
 
     public function show($id)
     {
+        $response = new Responses;
         $checkData  = Palace::find($id);
         if (!$checkData == []) {
             $setData = [
@@ -160,17 +141,9 @@ class PalaceController extends Controller
                 "price" => $checkData->price,
                 "description" => $checkData->description,
             ];
-            return response()->json([
-                "message" => "success",
-                'statusCode' => 200,
-                "data" => $setData
-            ]);
+           return $response->Response("success", $setData, 200);
         } else {
-            return response()->json([
-                "message" => 'error data tidak di temukan',
-                'statusCode' => 404,
-                "data" => null
-            ]);
+             return $response->Response("Data Not Found", null, 404);
         }
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Responses\Responses;
 use App\Models\Guide;
 use Illuminate\Http\Request;
 
@@ -19,11 +20,13 @@ class GuideController extends Controller
      */
     public function index()
     {
-        return response()->json([
-            "message" => "success",
-            "statusCode" => 200,
-            "data" => Guide::all(),
-        ]);
+        $response = new Responses;
+        try {
+            $data = Guide::all();
+            return $response->Response("success", $data, 200);
+        } catch (\Throwable $th) {
+            return $response->Response($th->getMessage(), null, 500);
+        }
     }
 
     /**
@@ -44,22 +47,15 @@ class GuideController extends Controller
      */
     public function store(Request $request)
     {
+        $response = new Responses;
         try {
             $isValidateData = $request->validate([
                 "name" => 'required',
             ]);
             Guide::create($isValidateData);
-            return response()->json([
-                "message" => "success",
-                'statusCode' => 200,
-                "data" => $isValidateData,
-            ]);
+            return $response->Response("success", $isValidateData, 200);
         } catch (\Throwable $th) {
-            return response()->json([
-                "message" => $th->getMessage(),
-                'statusCode' => 400,
-                "data" => null
-            ]);
+            return $response->Response($th->getMessage(), null, 400);
         }
     }
 
@@ -69,7 +65,7 @@ class GuideController extends Controller
      * @param  \App\Models\Guide  $guide
      * @return \Illuminate\Http\Response
      */
-   
+
 
     /**
      * Show the form for editing the specified resource.
@@ -91,22 +87,15 @@ class GuideController extends Controller
      */
     public function update(Request $request, Guide $guide)
     {
+        $response = new Responses;
         try {
             $isValidateData = $request->validate([
                 "name" => 'required',
             ]);
             $guide->update($isValidateData);
-            return response()->json([
-                "message" => "success",
-                'statusCode' => 200,
-                "data" => $isValidateData,
-            ]);
+            return $response->Response("success", $isValidateData, 200);
         } catch (\Throwable $th) {
-            return response()->json([
-                "message" => $th->getMessage(),
-                'statusCode' => 400,
-                "data" => null
-            ]);
+            return $response->Response($th->getMessage(), null, 400);
         }
     }
 
@@ -116,19 +105,15 @@ class GuideController extends Controller
      * @param  \App\Models\Guide  $guide
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Guide $guide)
+    public function destroy($id)
     {
+        $response = new Responses;
         try {
-            $guide->delete();
-            return response()->json([
-                "message" => "success",
-                'statusCode' => 200,
-            ]);
+            $getData = Guide::find($id);
+            Guide::where('id', $id)->delete();
+            return $response->Response("success", $getData, 200);
         } catch (\Throwable $th) {
-            return response()->json([
-                "message" => $th->getMessage(),
-                'statusCode' => 400,
-            ]);
+            return $response->Response($th->getMessage(), null, 400);
         }
     }
 }

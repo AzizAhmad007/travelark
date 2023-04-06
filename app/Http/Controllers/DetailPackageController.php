@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Responses\Responses;
 use App\Models\DetailPackage;
 use Exception;
 use Illuminate\Http\Request;
@@ -20,6 +21,7 @@ class DetailPackageController extends Controller
 
     public function store(Request $request)
     {
+        $response = new Responses;
         try {
             $data = $request->validate([
                 'user_id'=>'required',
@@ -32,15 +34,9 @@ class DetailPackageController extends Controller
 
             DetailPackage::create($data);
 
-            return response()->json([
-                'message' => 'data berhasil dimasukkan',
-            ]);
+            return $response->Response("success", $data, 200);
         } catch (Exception $e) {
-            return response()->json([
-                'message' => 'terjadi kesalahan',
-                'error' => $e,
-                // 'msg' => $e->getMessage(),
-            ]);
+           return $response->Response($e->getMessage(), null, 400);
         }
     }
 
@@ -52,6 +48,7 @@ class DetailPackageController extends Controller
 
     public function update(Request $request, $id)
     {
+        $response = new Responses;
         try {
             $request->validate([
                 'user_id'=>'required',
@@ -71,33 +68,22 @@ class DetailPackageController extends Controller
             $data -> trip_package_id = $request -> trip_package_id;
             $data -> save();
 
-            return response()->json([
-                'message' => 'data berhasil diperbarui',
-            ]);
+            return $response->Response("success", $data, 200);
         } catch (Exception $e) {
-            return response()->json([
-                'message' => 'terjadi kesalahan',
-                'error' => $e,
-                // 'msg' => $e->getMessage(),
-            ]);
+            return $response->Response($e->getMessage(), null, 400);
         }
     }
 
     public function delete($id)
     {
+        $response = new Responses;
         try {
             $data = DetailPackage::find($id);
             $data -> delete();
 
-            return response()->json([
-                'message' => 'data berhasil terhapus'
-            ]);
+            return $response->Response("success", $data, 200);
         } catch (Exception $e) {
-            return response()->json([
-                'message' => 'terjadi kesalahan',
-                'error' => $e,
-                // 'msg' => $e->getMessage(),
-            ]);
+           return $response->Response($e->getMessage(), null, 400);
         }
     }
 }

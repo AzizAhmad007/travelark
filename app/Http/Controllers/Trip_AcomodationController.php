@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Responses\Responses;
 use App\Models\Trip_AcomodationModel;
 use Illuminate\Http\Request;
 
@@ -50,23 +51,16 @@ class Trip_AcomodationController extends Controller
      */
     public function store(Request $request)
     {
+        $response = new Responses;
         try {
             $isValidateData = $request->validate([
                 "name" => 'required',
                 "trip_package_id" => 'required',
             ]);
             Trip_AcomodationModel::create($isValidateData);
-            return response()->json([
-                "message" => "success",
-                'statusCode' => 200,
-                "data" => $isValidateData,
-            ]);
+            return $response->Response("success", $isValidateData, 200);
         } catch (\Throwable $th) {
-            return response()->json([
-                "message" => $th->getMessage(),
-                'statusCode' => 400,
-                "data" => null
-            ]);
+            return $response->Response($th->getMessage(), null, 400);
         }
     }
 
@@ -78,6 +72,7 @@ class Trip_AcomodationController extends Controller
      */
     public function show($id)
     {
+         $response = new Responses;
         $checkData  = Trip_AcomodationModel::find($id);
         if (!$checkData == []) {
             $setData = [
@@ -85,17 +80,9 @@ class Trip_AcomodationController extends Controller
                     "name" => $checkData->name,
                     "trip_package" => $checkData->trip_package_id,
                 ];
-            return response()->json([
-                "message" => "success",
-                'statusCode' => 200,
-                "data" => $setData
-            ]);
+            return $response->Response("success", $setData, 200);
         } else {
-            return response()->json([
-                "message" => 'error data tidak di temukan',
-                'statusCode' => 404,
-                "data" => null
-            ]);
+            return $response->Response("Data Not Found", null, 404);
         }
     }
 
@@ -108,6 +95,7 @@ class Trip_AcomodationController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $response = new Responses;
         try {
             $isValidateData = $request->validate([
                 "name" => 'required',
@@ -117,17 +105,9 @@ class Trip_AcomodationController extends Controller
             $getData->name = $isValidateData["name"];
             $getData->trip_package_id = $isValidateData["trip_package_id"];
             $getData->save();
-            return response()->json([
-                "message" => "success",
-                'statusCode' => 200,
-                "data" => $isValidateData,
-            ]);
+           return $response->Response("success", $isValidateData, 200);
         } catch (\Throwable $th) {
-            return response()->json([
-                "message" => $th->getMessage(),
-                'statusCode' => 400,
-                "data" => null
-            ]);
+            return $response->Response($th->getMessage(), null, 400);
         }
     }
 
@@ -139,20 +119,13 @@ class Trip_AcomodationController extends Controller
      */
     public function destroy($id)
     {
+         $response = new Responses;
         try {
             $getData = Trip_AcomodationModel::find($id);
             Trip_AcomodationModel::where('id', $id)->delete();
-            return response()->json([
-                "message" => "success",
-                'statusCode' => 200,
-                'data' => $getData
-            ]);
+            return $response->Response("success", $getData, 200);
         } catch (\Throwable $th) {
-            return response()->json([
-                "message" => $th->getMessage(),
-                'statusCode' => 400,
-                'data' => null
-            ]);
+            return $response->Response($th->getMessage(), null, 400);
         }
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Responses\Responses;
 use App\Models\InstantTravelModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -41,6 +42,7 @@ class Instant_travelerController extends Controller
     }
     public function store(Request $request)
     {
+        $response = new Responses;
         try {
             $isValidateData = $request->validate([
                 "user_id" => 'required|numeric',
@@ -48,22 +50,15 @@ class Instant_travelerController extends Controller
                 "quota" => 'required|numeric',
             ]);
             InstantTravelModel::create($isValidateData);
-            return response()->json([
-                "message" => "success",
-                'statusCode' => 200,
-                "data" => $isValidateData,
-            ]);
+             return $response->Response("success", $isValidateData, 200);
         } catch (\Throwable $th) {
-            return response()->json([
-                "message" => $th->getMessage(),
-                'statusCode' => 400,
-                "data" => null
-            ]);
+            return $response->Response($th->getMessage(), null, 400);
         }
     }
 
     public function update(Request $request, $id)
     {
+        $response = new Responses;
         try {
             $isValidateData = $request->validate([
                 "user_id" => 'required|numeric',
@@ -75,41 +70,27 @@ class Instant_travelerController extends Controller
             $getData->palace_id = $isValidateData["palace_id"];
             $getData->quota = $isValidateData["quota"];
             $getData->save();
-            return response()->json([
-                "message" => "success",
-                'statusCode' => 200,
-                "data" => $isValidateData,
-            ]);
+            return $response->Response("success", $isValidateData, 200);
         } catch (\Throwable $th) {
-            return response()->json([
-                "message" => $th->getMessage(),
-                'statusCode' => 400,
-                "data" => null
-            ]);
+           return $response->Response($th->getMessage(), null, 400);
         }
     }
 
     public function delete($id)
     {
+        $response = new Responses;
         try {
             $getData = InstantTravelModel::find($id);
             InstantTravelModel::where('id', $id)->delete();
-            return response()->json([
-                "message" => "success",
-                'statusCode' => 200,
-                'data' => $getData
-            ]);
+            return $response->Response("success", $getData, 200);
         } catch (\Throwable $th) {
-            return response()->json([
-                "message" => $th->getMessage(),
-                'statusCode' => 400,
-                'data' => null
-            ]);
+            return $response->Response($th->getMessage(), null, 400);
         }
     }
 
     public function show($id)
     {
+        $response = new Responses;
         $checkData  = InstantTravelModel::find($id);
         if (!$checkData == []) {
             $setData = [
@@ -118,17 +99,9 @@ class Instant_travelerController extends Controller
                 "palace_id" => $checkData->palace->palace_name,
                 "quota" => $checkData->quota,
             ];
-            return response()->json([
-                "message" => "success",
-                'statusCode' => 200,
-                "data" => $setData
-            ]);
+            return $response->Response("success", $setData, 200);
         } else {
-            return response()->json([
-                "message" => 'error data tidak di temukan',
-                'statusCode' => 404,
-                "data" => null
-            ]);
+           return $response->Response("Data Not Found", null, 404);
         }
     }
 }

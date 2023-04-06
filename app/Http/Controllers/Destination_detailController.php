@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Destination_detail;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Responses\Responses;
 use Illuminate\Http\Request;
 use Exception;
 
@@ -21,30 +22,18 @@ class Destination_detailController extends Controller
 
     public function show($id)
     {
-        try {
-            $destination_detail = Destination_detail::find($id);
-            if ($destination_detail == null) {
-                throw new Exception('Data tidak ditemukan');
-            }
-            return $destination_detail;
-
-            return response()->json([
-                'message' => 'Data ditemukan',
-                'statusCode' => 200,
-                'data' => $destination_detail
-            ]);
-        } catch (Exception $e) {
-            return response()->json([
-                'message' => $e,
-                'error' => 'Data tidak ditemukan',
-                'statusCode' => 400,
-                'data' => null
-            ]);
+        $response = new Responses;
+        $destination_detail = Destination_detail::find($id);
+        if ($destination_detail == null || $destination_detail === []) {
+            return $response->Response("Data Not Found", null, 404);
+        } else {
+            return $response->Response("Success", $destination_detail, 200);
         }
     }
 
     public function store(Request $request)
     {
+        $response = new Responses;
         try {
             $destination_detail = $request->validate([
                 'name' => 'required',
@@ -52,25 +41,15 @@ class Destination_detailController extends Controller
             ]);
 
             Destination_detail::create($destination_detail);
-
-            return response()->json([
-                'message' => 'success',
-                'statusCOde' => 200,
-                "data" => $destination_detail
-            ]);
+            return $response->Response("Success", $destination_detail, 200);
         } catch (Exception $e) {
-            return response()->json([
-                'message' => $e,
-                //'error' => $e->getMessage(),
-                'error' => 'Terjadi kesalahan',
-                'statusCode' => 400,
-                'data' => null
-            ]);
+            return $response->Response($e->getMessage(), null, 500);
         }
     }
 
-    public function update (Request $request, $id)
+    public function update(Request $request, $id)
     {
+        $response = new Responses;
         try {
             $destination_detail = $request->validate([
                 'name' => 'required',
@@ -81,19 +60,9 @@ class Destination_detailController extends Controller
             $data = $request->all();
             $destination_detail->update($data);
 
-            return response()->json([
-                'message' => 'update success',
-                'statusCode' => 200,
-                'data' => $data
-            ]);
-        } catch(Exception $e) {
-            return response()->json([
-                'message' => $e,
-                //'error' => $e->getMessage(),
-                'error' => 'Terjadi kesalahan',
-                'statusCode' => 400,
-                'data' => null
-            ]);
+            return $response->Response("Success", $data, 200);
+        } catch (Exception $e) {
+            return $response->Response($e->getMessage(), null, 500);
         }
     }
 

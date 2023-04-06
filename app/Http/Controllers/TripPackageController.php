@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Responses\Responses;
 use App\Models\TripPackage;
 use App\Http\Requests\StoreTripPackageRequest;
 use App\Http\Requests\UpdateTripPackageRequest;
@@ -65,6 +66,7 @@ class TripPackageController extends Controller
      */
     public function store(StoreTripPackageRequest $request)
     {
+         $response = new Responses;
         try {
             $isValidateData = $request->validate([
                 "created_by" => 'required|numeric',
@@ -75,17 +77,9 @@ class TripPackageController extends Controller
                 "price" => 'required|min:3|max:100',
             ]);
             TripPackage::create($isValidateData);
-            return response()->json([
-                "message" => "success",
-                'statusCode' => 200,
-                "data" => $isValidateData,
-            ]);
+            return $response->Response("success", $isValidateData, 200);
         } catch (\Throwable $th) {
-            return response()->json([
-                "message" => $th->getMessage(),
-                'statusCode' => 400,
-                "data" => null
-            ]);
+            return $response->Response($th->getMessage(), null, 400);
         }
     }
 
@@ -97,6 +91,7 @@ class TripPackageController extends Controller
      */
     public function show($id)
     {
+        $response = new Responses;
          $checkData  = TripPackage::find($id);
         if (!$checkData == []) {
             $setData = [
@@ -108,17 +103,9 @@ class TripPackageController extends Controller
                     "duration" =>  $checkData->duration,
                     "price" => $checkData->price
             ];
-            return response()->json([
-                "message" => "success",
-                'statusCode' => 200,
-                "data" => $setData
-            ]);
+            return $response->Response("success", $setData, 200);
         } else {
-            return response()->json([
-                "message" => 'error data tidak di temukan',
-                'statusCode' => 404,
-                "data" => null
-            ]);
+           return $response->Response("Data Not Found", null, 404);
         }
     }
 
@@ -142,6 +129,7 @@ class TripPackageController extends Controller
      */
     public function update(UpdateTripPackageRequest $request, $id)
     {
+        $response = new Responses;
         try {
             $isValidateData = $request->validate([
                "created_by" => 'required|numeric',
@@ -159,17 +147,9 @@ class TripPackageController extends Controller
             $getData->duration = $isValidateData["duration"];         
             $getData->price = $isValidateData["price"];
             $getData->save();
-            return response()->json([
-                "message" => "success",
-                'statusCode' => 200,
-                "data" => $isValidateData,
-            ]);
+           return $response->Response("success", $isValidateData, 200);
         } catch (\Throwable $th) {
-            return response()->json([
-                "message" => $th->getMessage(),
-                'statusCode' => 400,
-                "data" => null
-            ]);
+            return $response->Response($th->getMessage(), null, 400);
         }
     }
 
@@ -181,20 +161,13 @@ class TripPackageController extends Controller
      */
     public function destroy($id)
     {
+         $response = new Responses;
          try {
             $getData = TripPackage::find($id);
             TripPackage::where('id', $id)->delete();
-            return response()->json([
-                "message" => "success",
-                'statusCode' => 200,
-                'data' => $getData
-            ]);
+            return $response->Response("success", $getData, 200);
         } catch (\Throwable $th) {
-            return response()->json([
-                "message" => $th->getMessage(),
-                'statusCode' => 400,
-                'data' => null
-            ]);
+            return $response->Response($th->getMessage(), null, 400);
         }
     }
 }
