@@ -131,7 +131,7 @@ Route::group([
 
 
 
-Route::get('/province', [ControllersProvinceController::class, 'getProvince'])->middleware('IsAdmin');
+Route::get('/province', [ControllersProvinceController::class, 'getProvince']);
 Route::get('/city',  [CitiController::class, 'index']);
 Route::get('/country',  [CountryController::class, 'index']);
 Route::get('/tags',  [TagController::class, 'index']);
