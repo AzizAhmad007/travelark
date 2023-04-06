@@ -74,7 +74,7 @@ class AuthController extends Controller
             $record->token = $token;
             $record->save();
             $tokenAfterEncrypt = Crypt::encryptString($token);
-            return $this->respondWithToken($tokenAfterEncrypt);
+            return $this->respondWithToken($token);
         } catch (\Throwable $th) {
             return response()->json([
                 "message" => $th->getMessage(),
