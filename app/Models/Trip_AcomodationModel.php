@@ -14,6 +14,6 @@ class Trip_AcomodationModel extends Model
 
     public function trip_package() : BelongsTo
     {
-        return $this->belongsTo(TripPackage::class, 'trip_packages_id', 'id');
+        return $this->belongsTo(TripPackage::class, 'trip_package_id', 'id');
     }
 }

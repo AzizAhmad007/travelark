@@ -25,7 +25,7 @@ class Trip_AcomodationController extends Controller
                 $dataTransform[] = [
                     "id" => $value->id,
                     "name" => $value->name,
-                    "trip_package_id" => $value->trip_package,
+                    "trip_package" => $value->trip_package,
                 ];
             }
             return response()->json([
@@ -83,7 +83,7 @@ class Trip_AcomodationController extends Controller
             $setData = [
                     "id" => $checkData->id,
                     "name" => $checkData->name,
-                    "trip_package_id" => $checkData->trip_package_id,
+                    "trip_package" => $checkData->trip_package_id,
                 ];
             return response()->json([
                 "message" => "success",
