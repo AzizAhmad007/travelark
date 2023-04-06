@@ -27,7 +27,7 @@ class PalaceController extends Controller
                     "city_id" => $value->city->name,
                     "province_id" => $value->province->name,
                     "palace_name" => $value->palace_name,
-                    "image" => Storage::url('public/images/' . $value->image),
+                    "image" => Storage::url('public/palaces/' . $value->image),
                     "price" => $value->price,
                     "description" => $value->description,
                 ];
@@ -61,7 +61,7 @@ class PalaceController extends Controller
             ]);
             $image = $request->file('image');
             $imageName = Str::random(40) . '.' . $image->getClientOriginalExtension();
-            $image->storeAs('public/images', $imageName);
+            $image->storeAs('public/palaces', $imageName);
             $isValidateData['image'] = $imageName;
             Palace::create($isValidateData);
             return response()->json([
@@ -95,7 +95,7 @@ class PalaceController extends Controller
              $getData = Palace::find($id);
             $image = $request->file('image');
             $imageName = Str::random(40) . '.' . $image->getClientOriginalExtension();
-            $path = 'public/images/' . $getData->image;
+            $path = 'public/palaces/' . $getData->image;
             Storage::delete($path);
             $image->storeAs('public/images', $imageName);
             $isValidateData['image'] = $imageName;
@@ -128,7 +128,7 @@ class PalaceController extends Controller
         try {
             $getData = Palace::find($id);
             Palace::where('id', $id)->delete();
-             $path = 'public/images/' . $getData->image;
+             $path = 'public/palaces/' . $getData->image;
             Storage::delete($path);
             return response()->json([
                 "message" => "success",
@@ -156,7 +156,7 @@ class PalaceController extends Controller
                 "city_id" => $checkData->city->name,
                 "province_id" => $checkData->province->name,
                 "palace_name" => $checkData->palace_name,
-                "image" => Storage::url('public/images/' . $checkData->image),
+                "image" => Storage::url('public/palaces/' . $checkData->image),
                 "price" => $checkData->price,
                 "description" => $checkData->description,
             ];
