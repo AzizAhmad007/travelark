@@ -1,6 +1,7 @@
 <?php
 
 
+use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\DestinationController;
 use App\Http\Controllers\Destination_detailController;
 use App\Http\Controllers\AuthController;
@@ -153,7 +154,15 @@ Route::group([
     Route::post('trip-acomodation', [Trip_AcomodationController::class, 'store']);
 });
 
-
+Route::group([
+    'prefix' => 'chcekout'
+], function ($router) {
+    Route::get('/list-checkout', [CheckoutController::class, 'index']);
+    Route::get('/search-checkout/{id}', [CheckoutController::class, 'show']);
+    Route::post('/insert-checkout', [CheckoutController::class, 'store']);
+    Route::put('/update-checkout/{id}', [CheckoutController::class, 'update']);
+    Route::delete('/delete-checkout/{id}', [CheckoutController::class, 'delete']);
+});
 
 Route::get('/province', [ControllersProvinceController::class, 'getProvince']);
 Route::get('/city', [CitiController::class, 'index']);
