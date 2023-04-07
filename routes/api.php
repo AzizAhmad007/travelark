@@ -2,6 +2,7 @@
 
 
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\CheckoutPackageSummaryController;
 use App\Http\Controllers\DestinationController;
 use App\Http\Controllers\Destination_detailController;
 use App\Http\Controllers\AuthController;
@@ -162,6 +163,16 @@ Route::group([
     Route::post('/insert-checkout', [CheckoutController::class, 'store']);
     Route::put('/update-checkout/{id}', [CheckoutController::class, 'update']);
     Route::delete('/delete-checkout/{id}', [CheckoutController::class, 'delete']);
+});
+
+Route::group([
+    'prefix' => 'chcekout-package-summary'
+], function ($router) {
+    Route::get('/list-checkout-package-summary', [CheckoutPackageSummaryController::class, 'index']);
+    Route::get('/search-checkout-package-summary/{id}', [CheckoutPackageSummaryController::class, 'show']);
+    Route::post('/insert-checkout-package-summary', [CheckoutPackageSummaryController::class, 'store']);
+    Route::put('/update-checkout-package-summary/{id}', [CheckoutPackageSummaryController::class, 'update']);
+    Route::delete('/delete-checkout-package-summary/{id}', [CheckoutPackageSummaryController::class, 'delete']);
 });
 
 Route::get('/province', [ControllersProvinceController::class, 'getProvince']);
