@@ -19,12 +19,12 @@ class Instant_travelerController extends Controller
         try {
             $data = InstantTravelModel::with('user', 'palace')->get();
             foreach ($data as $key => $value) {
-
+                $imageContent = Storage::get($value->image);
                 $dataTransform[] = [
                     "id" => $value->id,
                     "user_id" => $value->user->fullname,
                     "palace_id" => $value->palace->palace_name,
-                    "quota" => $value->quota,
+                    "image" => base64_encode($imageContent),
                 ];
             }
             return response()->json([
@@ -47,8 +47,11 @@ class Instant_travelerController extends Controller
             $isValidateData = $request->validate([
                 "user_id" => 'required|numeric',
                 "palace_id" => 'required|numeric',
-                "quota" => 'required|numeric',
+                "image" => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             ]);
+            $image = $request->file('image');
+            $path = $image->store('public/palaces');
+            $isValidateData['image'] = $path;
             InstantTravelModel::create($isValidateData);
              return $response->Response("success", $isValidateData, 200);
         } catch (\Throwable $th) {
@@ -63,12 +66,16 @@ class Instant_travelerController extends Controller
             $isValidateData = $request->validate([
                 "user_id" => 'required|numeric',
                 "palace_id" => 'required|numeric',
-                "quota" => 'required|numeric',
+                "image" => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             ]);
             $getData = InstantTravelModel::find($id);
+             $setImage = $request->file('image');
+            $pathUpdate = $setImage->store('public/palaces');
+            $path = $getData->image;
+            Storage::delete($path);
             $getData->user_id = $isValidateData["user_id"];
             $getData->palace_id = $isValidateData["palace_id"];
-            $getData->quota = $isValidateData["quota"];
+            $getData->image = $pathUpdate;
             $getData->save();
             return $response->Response("success", $isValidateData, 200);
         } catch (\Throwable $th) {
@@ -82,6 +89,8 @@ class Instant_travelerController extends Controller
         try {
             $getData = InstantTravelModel::find($id);
             InstantTravelModel::where('id', $id)->delete();
+            $path = $getData->image;
+            Storage::delete($path);
             return $response->Response("success", $getData, 200);
         } catch (\Throwable $th) {
             return $response->Response($th->getMessage(), null, 400);
@@ -93,11 +102,12 @@ class Instant_travelerController extends Controller
         $response = new Responses;
         $checkData  = InstantTravelModel::find($id);
         if (!$checkData == []) {
+             $imageContent = Storage::get($checkData->image);
             $setData = [
                 "id" => $checkData->id,
                 "user_id" => $checkData->user->fullname,
                 "palace_id" => $checkData->palace->palace_name,
-                "quota" => $checkData->quota,
+                "image" => base64_encode($imageContent),
             ];
             return $response->Response("success", $setData, 200);
         } else {

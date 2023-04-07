@@ -28,10 +28,12 @@ class TripPackageController extends Controller
                     "id" => $value->id,
                     "created_by" => $value->user->fullname,
                     "type" => $value->type,
-                    "destination_id" =>$value->destination->name,
+                    "destination_id" =>$value->destination->destination_name,
                     "guide_id" => $value->guide->name,
                     "duration" =>  $value->duration,
-                    "price" => $value->price
+                    "price" => $value->price,
+                    "quota" => $value->quota,
+                    "departure_time" => $value->departure_time
                 ];
             }
             return response()->json([
@@ -74,6 +76,8 @@ class TripPackageController extends Controller
                 "destination_id" => 'required',
                 "guide_id" => 'required',
                 "duration" => 'required',
+                "quota" => 'required',
+                "departure_time" => 'required',
                 "price" => 'required|min:3|max:100',
             ]);
             TripPackage::create($isValidateData);
@@ -101,7 +105,9 @@ class TripPackageController extends Controller
                     "destination_id" =>$checkData->destination->name,
                     "guide_id" => $checkData->guide->name,
                     "duration" =>  $checkData->duration,
-                    "price" => $checkData->price
+                    "price" => $checkData->price,
+                    "departure_time" => $checkData->departure_time,
+                    "quota" => $checkData->quota
             ];
             return $response->Response("success", $setData, 200);
         } else {
@@ -137,6 +143,8 @@ class TripPackageController extends Controller
                 "destination_id" => 'required',
                 "guide_id" => 'required',
                 "duration" => 'required',
+                "quota" => 'required',
+                "departure_time" => 'required',
                 "price" => 'required|min:3|max:100',
             ]);
             $getData = TripPackage::find($id);
@@ -145,6 +153,8 @@ class TripPackageController extends Controller
             $getData->destination_id = $isValidateData["destination_id"];
             $getData->guide_id = $isValidateData["guide_id"];
             $getData->duration = $isValidateData["duration"];         
+            $getData->quota = $isValidateData["quota"];         
+            $getData->departure_time = $isValidateData["departure_time"];         
             $getData->price = $isValidateData["price"];
             $getData->save();
            return $response->Response("success", $isValidateData, 200);

@@ -19,7 +19,6 @@ return new class extends Migration
             $table->foreignId('trip_packages_id')->references('id')->on('trip_packages');
             $table->longText('desciption');
             $table->integer('quota');
-            $table->dateTime('departure_time');
             $table->double('total_price');
             $table->timestamps();
 

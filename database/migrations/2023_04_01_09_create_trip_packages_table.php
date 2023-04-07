@@ -20,6 +20,8 @@ return new class extends Migration
             $table->foreignId('guide_id')->references('id')->on('guides');
             $table->enum('type',['open','private']);
             $table->integer('duration');
+            $table->integer('quota');
+            $table->dateTime('departure_time');
             $table->double('price');
             $table->timestamps();
         });

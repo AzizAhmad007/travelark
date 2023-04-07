@@ -13,13 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('checkouts', function (Blueprint $table) {
+        Schema::create('Featured_trips', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->references('id')->on('users');
-            $table->string('firstname');
-            $table->string('lastname');
-            $table->string('email');
-            $table->string('phone_number');
+            $table->foreignId('trip_package_id')->references('id')->on('trip_packages');
+            $table->string('name');
             $table->timestamps();
         });
     }
@@ -31,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('checkouts');
+        Schema::dropIfExists('Featured_trips');
     }
 };

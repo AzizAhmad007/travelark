@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('trip_acomodations', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
             $table->foreignId('trip_package_id')->references('id')->on('trip_packages');
+            $table->string('name');
             $table->timestamps();
 
             

@@ -24,7 +24,7 @@ class CitiController extends Controller
         $response = new Responses;
         try {
             $data = CitiModel::all();
-            return $response->Response("success", $data, 200);
+            
         } catch (\Throwable $th) {
              return $response->Response($th->getMessage(), null, 500);
         }

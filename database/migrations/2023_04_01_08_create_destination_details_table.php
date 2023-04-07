@@ -15,8 +15,9 @@ return new class extends Migration
     {
         Schema::create('destination_details', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
             $table->foreignId('destination_id')->references('id')->on('destinations');
+            $table->string('name');
+            $table->text('image');
             $table->timestamps();
 
            
