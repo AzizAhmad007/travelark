@@ -16,9 +16,15 @@ return new class extends Migration
         Schema::create('checkout_instant_travel_sumaries', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->references('id')->on('users');
-            $table->foreignId('instant_travel_id')->references('id')->on('instant_travels');
+            $table->foreignId('palace_id')->references('id')->on('palaces');
+            $table->string('transaction_number')->unique();
             $table->double('total_price');
-            $table->bigInteger('checkout_id');
+            $table->dateTime('ticket_date');
+            $table->integer('qty');
+            $table->string('firstname');
+            $table->string('lastname');
+            $table->string('email');
+            $table->string('phone_number');
             $table->timestamps();
         });
     }

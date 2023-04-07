@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignId('user_id')->references('id')->on('users');
 
             $table->foreignId('palace_id')->references('id')->on('palaces');
-            $table->integer('quota');
+            $table->text('image');
             $table->timestamps();
 
          

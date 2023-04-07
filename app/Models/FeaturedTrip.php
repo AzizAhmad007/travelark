@@ -6,10 +6,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Trip_AcomodationModel extends Model
+class FeaturedTrip extends Model
 {
     use HasFactory;
-    protected $table = "trip_acomodations";
+    protected $table = "Featured_trips";
     protected $guarded = ['id'];
 
     public function trip_package() : BelongsTo

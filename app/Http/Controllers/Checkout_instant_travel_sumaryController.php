@@ -5,10 +5,19 @@ namespace App\Http\Controllers;
 use App\Models\Checkout_instant_travel_sumary;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Responses\Responses;
+use App\Models\Palace;
+use Carbon\Carbon;
 use Exception;
+use Illuminate\Support\Str;
 
 class Checkout_instant_travel_sumaryController extends Controller
 {
+     public function __construct()
+    {
+        $this->middleware('auth:api', ['except' => ['login', 'register']]);
+        
+    }
     public function index()
     {
         $checkout_instant_travel_sumary = Checkout_instant_travel_sumary::all();
@@ -17,29 +26,48 @@ class Checkout_instant_travel_sumaryController extends Controller
 
     public function store(Request $request)
     {
+        $response = new Responses;
         try {
             $checkout_instant_travel_sumary = $request->validate([
                 'user_id' => 'required',
-                'instant_travel_id' => 'required',
+                'palace_id' => 'required',
                 'total_price' => 'required',
-                'checkout_id' => 'required'
+                'firstname' => 'required',
+                'lastname' => 'required',
+                'email' => 'required',
+                'phone_number' => 'required',
+                'ticket_date' => 'required',
+                'qty' => 'required'
             ]);
+            $transactionNumber = Str::random(10).uniqid();
+            $checkout_instant_travel_sumary['transaction_number'] = $transactionNumber;
+            $getData = Checkout_instant_travel_sumary::create($checkout_instant_travel_sumary);
 
-            Checkout_instant_travel_sumary::create($checkout_instant_travel_sumary);
+            $res = [
+                "transaction_number" => $getData->transaction_number,
+                "Date" => Carbon::createFromTimestamp($getData->created_at)->toDateTimeString(),
+                "status" => "Success",
+                "Category" => "Destination",
+                "destination" => [
+                    "name" => $getData->palace->palace_name,
+                    "tag" => $getData->palace->tag->name,
+                    "city" => $getData->palace->city->name,
+                    "province" => $getData->palace->province->name,
+                    "country" => $getData->palace->country->name,
+                ],
+                "ticket_date" => $getData->ticket_date,
+                "qty" => $getData->qty,
+                "price" => $getData->palace->price,
+                "total_price" => $getData->total_price,
+                "firstname" => $getData->firstname,
+                "lastname" => $getData->lastname,
+                "email" => $getData->email,
+                "phone_number" => $getData->phone_number
+            ];
 
-            return response()->json([
-                'message' => 'success',
-                'statusCode' => 200,
-                'data' => $checkout_instant_travel_sumary
-            ]);
+            return $response->Response("success", $res, 200);
         } catch (Exception $e) {
-            return response()->json([
-                'message' => $e,
-                //'error' => $e->getMessage(),
-                'error' => 'Terjadi kesalahan',
-                'statusCode' => 400,
-                'data' => null
-            ]);
+           return $response->Response($e->getMessage(), null, 400);
         }
     }
 

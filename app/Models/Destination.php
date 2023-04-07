@@ -5,55 +5,38 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Destination extends Model
 {
     use HasFactory;
-
-    protected $fillable = [
-        'user_id',
-        'tag_id',
-        'country_id',
-        'city_id',
-        'province_id',
-        'destination_name',
-        'image',
-        'price',
-        'description',
-        'private_price'
-    ];
+    protected $table = "destinations";
 
     protected $guarded = ['id'];
 
-    public function getuser()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
-    public function gettag()
+    public function tag(): BelongsTo
     {
         return $this->belongsTo(Tag::class, 'tag_id', 'id');
     }
 
-    public function getcountry()
+    public function country(): BelongsTo
     {
         return $this->belongsTo(Country::class, 'country_id', 'id');
     }
 
-    public function getcity()
+    public function city(): BelongsTo
     {
-        return $this->belongsTo(City::class, 'city_id', 'id');
+        return $this->belongsTo(CitiModel::class, 'city_id', 'id');
     }
 
-    public function getprovince()
+    public function province(): BelongsTo
     {
         return $this->belongsTo(Province::class, 'province_id', 'id');
     }
 
-    protected function image(): Attribute
-    {
-        return Attribute::make(
-            get: fn ($value) => asset('/storage/destinations/' . $value),
-        );
-    }
 }

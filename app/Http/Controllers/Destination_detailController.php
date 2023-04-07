@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Destination_detail;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Responses\Responses;
+use App\Models\Destination;
 use Illuminate\Http\Request;
 use Exception;
+use Illuminate\Support\Facades\Storage;
 
 class Destination_detailController extends Controller
 {
@@ -27,6 +29,12 @@ class Destination_detailController extends Controller
         if ($destination_detail == null || $destination_detail === []) {
             return $response->Response("Data Not Found", null, 404);
         } else {
+            $imageContent = Storage::get($destination_detail->image);
+            $setData = [
+                "id" => $destination_detail->id,
+                "destination" => Destination::where('id', $destination_detail->destination_id),
+                "image" => base64_encode($imageContent),
+            ];
             return $response->Response("Success", $destination_detail, 200);
         }
     }
@@ -37,9 +45,12 @@ class Destination_detailController extends Controller
         try {
             $destination_detail = $request->validate([
                 'name' => 'required',
-                'destination_id' => 'required'
+                'destination_id' => 'required',
+                "image" => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             ]);
-
+            $image = $request->file('image');
+            $path = $image->store('public/destinations');
+            $isValidateData['image'] = $path;
             Destination_detail::create($destination_detail);
             return $response->Response("Success", $destination_detail, 200);
         } catch (Exception $e) {
@@ -54,6 +65,7 @@ class Destination_detailController extends Controller
             $destination_detail = $request->validate([
                 'name' => 'required',
                 'destination_id' => 'required',
+                "image" => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             ]);
 
             $destination_detail = Destination_detail::find($id);
@@ -68,26 +80,19 @@ class Destination_detailController extends Controller
 
     public function destroy($id)
     {
+        $response = new Responses;
         try {
             $destination_detail = Destination_detail::find($id);
             if ($destination_detail == null) {
-                throw new Exception('Data tidak ditemukan');
+                return $response->Response("Data Not Found", null, 404);
             }
-            $destination_detail = Destination_detail::find($id);
             $destination_detail->delete();
+            $path = $destination_detail->image;
+            Storage::delete($path);
 
-            return response()->json([
-                'message' => 'delete success',
-                'statusCode' => 200,
-                'data' => $destination_detail
-            ]);
+             return $response->Response("success", $destination_detail, 200);
         } catch (Exception $e) {
-            return response()->json([
-                'message' => $e,
-                'error' => 'Data tidak ditemukan',
-                'statusCode' => 400,
-                'data' => null
-            ]);
+           return $response->Response($e, null, 400);
         }
     }
 }

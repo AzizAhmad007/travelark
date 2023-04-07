@@ -11,12 +11,5 @@ class Ticket extends Model
     
     protected $table = 'tickets';
 
-    protected $fillable = [
-        'user_id',
-        'first_name',
-        'last_name',
-        'email',
-        'phone',
-        'message'
-    ];
+    protected $guarded = ['id'];
 }

@@ -78,7 +78,7 @@ class Trip_AcomodationController extends Controller
             $setData = [
                     "id" => $checkData->id,
                     "name" => $checkData->name,
-                    "trip_package" => $checkData->trip_package_id,
+                    "trip_package" => $checkData->trip_package,
                 ];
             return $response->Response("success", $setData, 200);
         } else {
