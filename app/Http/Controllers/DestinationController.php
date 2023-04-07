@@ -40,9 +40,8 @@ class DestinationController extends Controller
             ]);
 
             $image = $request->file('image');
-            $imageName = Str::random(40) . '.' . $image->getClientOriginalExtension();
-            $image->storeAs('public/destinations', $imageName);
-            $destination['image'] = $imageName;
+            $path = $image->store('public/destinations');
+            $destination['image'] = $path;
 
             Destination::create($destination);
 
@@ -59,6 +58,7 @@ class DestinationController extends Controller
             if ($checkData === []) {
                  return $response->Response("Data Not Found", null, 400);
             } else {
+                $imageContent = Storage::get($checkData->image);
                 $destination = [
                 'user_id' => $checkData->user_id,
                 'tag_id' => $checkData->tag_id,
@@ -66,7 +66,7 @@ class DestinationController extends Controller
                 'city_id' => $checkData->city_id,
                 'province_id' => $checkData->province_id,
                 'destination_name' => $checkData->destination_name,
-                'image' => Storage::url('public/destinations/' . $checkData->image),
+                'image' => base64_encode($imageContent),
                 'price' => $checkData->price,
                 'description' => $checkData->description,
                 'private_price' => $checkData->private_price
@@ -82,7 +82,7 @@ class DestinationController extends Controller
     {
         $response = new Responses;
         try {
-            $destination = $request->validate([
+            $request->validate([
                 'user_id' => 'required',
                 'tag_id' => 'required',
                 'country_id' => 'required',
@@ -96,12 +96,10 @@ class DestinationController extends Controller
             ]);
 
             $destination = Destination::find($id);
-            $image = $request->file('image');
-            $imageName = Str::random(40) . '.' . $image->getClientOriginalExtension();
-            $path = 'public/destinations/' . $destination->image;
+            $setImage = $request->file('image');
+            $pathUpdate = $setImage->store('public/destinations');
+            $path = $destination->image;
             Storage::delete($path);
-            $image->storeAs('public/destinations', $imageName);
-            $destination['image'] = $imageName;
             $data = $request->all();
 
             $destination->update([
@@ -111,7 +109,7 @@ class DestinationController extends Controller
                 'city_id' => $request->city_id,
                 'province_id' => $request->province_id,
                 'destination_name' => $request->destination_name,
-                'image' => $imageName,
+                'image' => $pathUpdate,
                 'price' => $request->price,
                 'description' => $request->description,
                 'private_price' => $request->private_price
@@ -132,7 +130,7 @@ class DestinationController extends Controller
                 return $response->Response("Data Not Found", null, 404);
             }
 
-            $path = 'public/destinations/' . $destination->image;
+            $path = $destination->image;
             Storage::delete($path);
             $destination->delete();
 

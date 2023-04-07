@@ -20,17 +20,6 @@ class IsTraveler
      public function handle(Request $request, Closure $next)
     {
         if (Auth::user() && Auth::user()->level == 'traveler') {
-            try {
-                $token = Crypt::decryptString($request->input('token_enc'));
-                JWTAuth::toUser($token);
-            } catch (\Tymon\JWTAuth\Exceptions\JWTException $e) {
-                // Token is invalid
-                return response()->json([
-                    'message' => $e->getMessage(),
-                    'statusCode' => 401,
-                    'data' => null
-                ]);
-            }
             return $next($request);
         }
         return response()->json([

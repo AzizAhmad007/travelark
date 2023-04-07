@@ -73,7 +73,7 @@ class AuthController extends Controller
             $record = User::where('username', $credentials["username"])->first();
             $record->token = $token;
             $record->save();
-            $tokenAfterEncrypt = Crypt::encryptString($token);
+            // $tokenAfterEncrypt = Crypt::encryptString($token);
             return $this->respondWithToken($token);
         } catch (\Throwable $th) {
             return response()->json([
@@ -106,6 +106,7 @@ class AuthController extends Controller
     protected function respondWithToken($token)
     {
         $dataUser = [
+            "id" => auth()->user()->id,
             "username" => auth()->user()->username,
             "email" => auth()->user()->email,
             "fullname" => auth()->user()->fullname,
