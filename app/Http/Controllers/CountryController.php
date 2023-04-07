@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Responses\Responses;
 use App\Models\Countries;
 use App\Models\Country;
 use Illuminate\Http\Request;
@@ -12,21 +13,14 @@ class CountryController extends Controller
     {
         $this->middleware('auth:api', ['except' => ['login', 'register']]);
     }
-     public function index()
+    public function index()
     {
-        try{
-            return response()->json([
-            "message" => "success",
-            "statusCode" => 200,
-            "data" => Country::all(),
-        ]);
-        }catch(\Throwable $th){
-             return response()->json([
-            "message" => $th->getMessage(),
-            "statusCode" => 400,
-            "data" => null
-            ]);
+        $response = new Responses;
+        try {
+            $data = Country::all();
+            return $response->Response("success", $data, 200);
+        } catch (\Throwable $th) {
+            return $response->Response($th->getMessage(), null, 500);
         }
-        
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Destination;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Responses\Responses;
 use Exception;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -23,6 +24,7 @@ class DestinationController extends Controller
 
     public function store(Request $request)
     {
+        $response = new Responses;
         try {
             $destination = $request->validate([
                 'user_id' => 'required',
@@ -38,36 +40,25 @@ class DestinationController extends Controller
             ]);
 
             $image = $request->file('image');
-            $imageName = Str::random(40) . '.' . $image->getClientOriginalExtension();
-            $image->storeAs('public/destinations', $imageName);
-            $destination['image'] = $imageName;
+            $path = $image->store('public/destinations');
+            $destination['image'] = $path;
 
             Destination::create($destination);
 
-            return response()->json([
-                'message' => 'success',
-                'statusCOde' => 200,
-                "data" => $destination
-            ]);
+            return $response->Response("success", $destination, 200);
         } catch (Exception $e) {
-            return response()->json([
-                'message' => $e,
-                //'error' => $e->getMessage(),
-                'error' => 'Terjadi kesalahan',
-                'statusCode' => 400,
-                'data' => null
-            ]);
+             return $response->Response($e->getMessage(), null, 400);
         }
     }
 
     public function show($id)
     {
-        try {
+            $response = new Responses;
             $checkData = Destination::find($id);
-            if ($checkData == null) {
-                throw new Exception('Data tidak ditemukan');
+            if ($checkData === []) {
+                 return $response->Response("Data Not Found", null, 400);
             } else {
-
+                $imageContent = Storage::get($checkData->image);
                 $destination = [
                 'user_id' => $checkData->user_id,
                 'tag_id' => $checkData->tag_id,
@@ -75,32 +66,23 @@ class DestinationController extends Controller
                 'city_id' => $checkData->city_id,
                 'province_id' => $checkData->province_id,
                 'destination_name' => $checkData->destination_name,
-                'image' => Storage::url('public/destinations/' . $checkData->image),
+                'image' => base64_encode($imageContent),
                 'price' => $checkData->price,
                 'description' => $checkData->description,
                 'private_price' => $checkData->private_price
                 ];
+                 return $response->Response("success", $destination, 200);
             }
 
-            return response()->json([
-                'message' => 'Data ditemukan',
-                'statusCode' => 200,
-                'data' => $destination
-            ]);
-        } catch (Exception $e) {
-            return response()->json([
-                'message' => $e,
-                'error' => 'Data tidak ditemukan',
-                'statusCode' => 400,
-                'data' => null
-            ]);
-        }
+          
+       
     }
 
     public function update(Request $request, $id)
     {
+        $response = new Responses;
         try {
-            $destination = $request->validate([
+            $request->validate([
                 'user_id' => 'required',
                 'tag_id' => 'required',
                 'country_id' => 'required',
@@ -114,12 +96,10 @@ class DestinationController extends Controller
             ]);
 
             $destination = Destination::find($id);
-            $image = $request->file('image');
-            $imageName = Str::random(40) . '.' . $image->getClientOriginalExtension();
-            $path = 'public/destinations/' . $destination->image;
+            $setImage = $request->file('image');
+            $pathUpdate = $setImage->store('public/destinations');
+            $path = $destination->image;
             Storage::delete($path);
-            $image->storeAs('public/destinations', $imageName);
-            $destination['image'] = $imageName;
             $data = $request->all();
 
             $destination->update([
@@ -129,52 +109,34 @@ class DestinationController extends Controller
                 'city_id' => $request->city_id,
                 'province_id' => $request->province_id,
                 'destination_name' => $request->destination_name,
-                'image' => $request->image,
+                'image' => $pathUpdate,
                 'price' => $request->price,
                 'description' => $request->description,
                 'private_price' => $request->private_price
             ]);
 
-            return response()->json([
-                'message' => 'update success',
-                'statusCode' => 200,
-                'data' => $data
-            ]);
+           return $response->Response("success", $data, 200);
         } catch(Exception $e) {
-            return response()->json([
-                'message' => $e,
-                //'error' => $e->getMessage(),
-                'error' => 'Terjadi kesalahan',
-                'statusCode' => 400,
-                'data' => null
-            ]);
+           return $response->Response($e->getMessage(), null, 400);
         }
     }
 
     public function destroy($id)
     {
+         $response = new Responses;
         try {
             $destination = Destination::find($id);
-            if ($destination == null) {
-                throw new Exception('Data tidak ditemukan');
+            if ($destination == null || $destination === []) {
+                return $response->Response("Data Not Found", null, 404);
             }
 
-            $path = 'public/destinations/' . $destination->image;
+            $path = $destination->image;
             Storage::delete($path);
             $destination->delete();
 
-            return response()->json([
-                'message' => 'delete success',
-                'statusCode' => 200,
-                'data' => $destination
-            ]);
+            return $response->Response("success", $destination, 200);
         } catch (Exception $e) {
-            return response()->json([
-                'message' => $e,
-                'error' => 'Data tidak ditemukan',
-                'statusCode' => 400,
-                'data' => null
-            ]);
+            return $response->Response($e->getMessage(), null, 400);
         }
     }
 }
