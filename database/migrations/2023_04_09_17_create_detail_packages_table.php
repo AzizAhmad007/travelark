@@ -17,13 +17,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->references('id')->on('users');
             $table->foreignId('trip_packages_id')->references('id')->on('trip_packages');
-            $table->longText('desciption');
-            $table->integer('quota');
-            $table->double('total_price');
+            $table->foreignId('checkout_package_id')->references('id')->on('checkout_package_travel_sumaries');
             $table->timestamps();
-
-           
-
             
         });
     }
