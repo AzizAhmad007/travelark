@@ -80,10 +80,25 @@ class Checkout_instant_travel_sumaryController extends Controller
             } else {
 
                 $checkout_instant_travel_sumary = [
-                    'user_id' => $checkdata->user_id,
-                    'instant_travel_id' => $checkdata->instant_travel_id,
-                    'total_price' => $checkdata->total_price,
-                    'checkout_id' => $checkdata->checkout_id
+                    "transaction_number" => $checkdata->transaction_number,
+                    "Date" => Carbon::createFromTimestamp($checkdata->created_at)->toDateTimeString(),
+                    "status" => "Success",
+                    "Category" => "Destination",
+                    "destination" => [
+                        "name" => $checkdata->palace->palace_name,
+                        "tag" => $checkdata->palace->tag->name,
+                        "city" => $checkdata->palace->city->name,
+                        "province" => $checkdata->palace->province->name,
+                        "country" => $checkdata->palace->country->name,
+                    ],
+                    "ticket_date" => $checkdata->ticket_date,
+                    "qty" => $checkdata->qty,
+                    "price" => $checkdata->palace->price,
+                    "total_price" => $checkdata->total_price,
+                    "firstname" => $checkdata->firstname,
+                    "lastname" => $checkdata->lastname,
+                    "email" => $checkdata->email,
+                    "phone_number" => $checkdata->phone_number
                 ];
             }
 
@@ -107,9 +122,14 @@ class Checkout_instant_travel_sumaryController extends Controller
         try{
             $checkout_instant_travel_sumary = $request->validate([
                 'user_id' => 'required',
-                'instant_travel_id' => 'required',
+                'palace_id' => 'required',
                 'total_price' => 'required',
-                'checkout_id' => 'required'
+                'firstname' => 'required',
+                'lastname' => 'required',
+                'email' => 'required',
+                'phone_number' => 'required',
+                'ticket_date' => 'required',
+                'qty' => 'required'
             ]);
 
             $checkout_instant_travel_sumary = Checkout_instant_travel_sumary::find($id);
@@ -117,9 +137,14 @@ class Checkout_instant_travel_sumaryController extends Controller
 
             $checkout_instant_travel_sumary->update([
                 'user_id' => $request->user_id,
-                'instant_travel_id' => $request->instant_travel_id,
+                'palace_id' => $request->palace_id,
                 'total_price' => $request->total_price,
-                'checkout_id' => $request->checkout
+                'firstname' => $request->firstname,
+                'lastname' => $request->lastname,
+                'email' => $request->email,
+                'phone_number' => $request->phone_number,
+                'ticket_date' => $request->ticket_date,
+                'qty' => $request->qty,
             ]);
 
             return response()->json([
