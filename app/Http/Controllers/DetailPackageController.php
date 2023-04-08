@@ -25,11 +25,8 @@ class DetailPackageController extends Controller
         try {
             $data = $request->validate([
                 'user_id'=>'required',
-                'description'=>'required',
-                'quota'=>'required',
-                'departure_time'=>'required',
-                'total_price'=>'required',
-                'trip_package_id'=>'required'
+                'trip_packages_id'=>'required',
+                'checkout_package_id'=>'required',
             ]);
 
             DetailPackage::create($data);
@@ -56,23 +53,17 @@ class DetailPackageController extends Controller
     {
         $response = new Responses;
         try {
-            $request->validate([
+            $isValidate = $request->validate([
                 'user_id'=>'required',
-                'description'=>'required',
-                'quota'=>'required',
-                'departure_time'=>'required',
-                'total_price'=>'required',
-                'trip_package_id'=>'required'
+                'trip_packages_id'=>'required',
+                'checkout_package_id'=>'required',
             ]);
 
             $data = DetailPackage::find($id);
-            $data -> user_id = $request -> user_id;
-            $data -> description = $request -> description;
-            $data -> quota = $request -> quota;
-            $data -> departure_time = $request -> departure_time;
-            $data -> total_price = $request -> total_price;
-            $data -> trip_package_id = $request -> trip_package_id;
-            $data -> save();
+            $data->user_id = $isValidate["user_id"];
+            $data->trip_packages_id = $isValidate["trip_packages_id"];
+            $data->checkout_package_id = $isValidate["checkout_package_id"];
+            $data->save();
 
             return $response->Response("success", $data, 200);
         } catch (Exception $e) {

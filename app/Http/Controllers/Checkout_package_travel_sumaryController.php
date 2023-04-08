@@ -4,13 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Responses\Responses;
 use App\Models\Checkout_package_travel_sumary;
+use App\Models\DetailPackage;
+use App\Models\TripPackage;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class Checkout_package_travel_sumaryController extends Controller
 {
-    public function __construct() {
+    public function __construct()
+    {
         $this->middleware('auth:api', ['except' => ['login', 'register']]);
     }
 
@@ -35,10 +38,31 @@ class Checkout_package_travel_sumaryController extends Controller
                 'ticket_date' => 'required',
                 'qty' => 'required'
             ]);
-            $transactionNumber = Str::random(10).uniqid();
+            $travelerPackage = DetailPackage::where("trip_packages_id", $data["trip_package_id"])->get();
+            $count = count($travelerPackage);
+            $tripPackage = TripPackage::where("id", $data["trip_package_id"])->first();
+            if ($count == 0) {
+                return $response->Response("Cannot Read Package", null, 500);
+            } else {
+                $newArry = [];
+                for ($i = 0; $i < $count; $i++) {
+                    array_push($newArry, $travelerPackage[$i]->checkout_package->qty);
+                }
+                $sum = array_sum($newArry) + $data["qty"];
+                if ($sum > $tripPackage->quota) {
+                    return $response->Response("Quota Is Full", null, 500);
+                } 
+            }
+            $transactionNumber = Str::random(10) . uniqid();
             $data['transaction_number'] = $transactionNumber;
             $getData = Checkout_package_travel_sumary::create($data);
-             $res = [
+            $insertDetailPackage = [
+                "user_id" => $data['user_id'],
+                "trip_packages_id" => $data["trip_package_id"],
+                "checkout_package_id" => $getData->id,
+            ];
+            DetailPackage::create($insertDetailPackage);
+            $res = [
                 "transaction_number" => $getData->transaction_number,
                 "Date" => $getData->trip_package->departure_time,
                 "status" => "Success",
@@ -85,12 +109,12 @@ class Checkout_package_travel_sumaryController extends Controller
             ]);
 
             $data = Checkout_package_travel_sumary::find($id);
-            $data -> user_id = $request -> user_id;
-            $data -> firstname = $request -> firstname;
-            $data -> lastname = $request -> lastname;
-            $data -> email = $request -> email;
-            $data -> phone_number = $request -> phone_number;
-            $data -> save();
+            $data->user_id = $request->user_id;
+            $data->firstname = $request->firstname;
+            $data->lastname = $request->lastname;
+            $data->email = $request->email;
+            $data->phone_number = $request->phone_number;
+            $data->save();
 
             return response()->json([
                 'message' => 'success',
@@ -108,7 +132,7 @@ class Checkout_package_travel_sumaryController extends Controller
     {
         try {
             $data = Checkout_package_travel_sumary::find($id);
-            $data -> delete();
+            $data->delete();
 
             return response()->json([
                 'message' => 'success',
