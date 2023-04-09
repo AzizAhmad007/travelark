@@ -41,10 +41,8 @@ class Checkout_package_travel_sumaryController extends Controller
             $travelerPackage = DetailPackage::where("trip_packages_id", $data["trip_package_id"])->get();
             $count = count($travelerPackage);
             $tripPackage = TripPackage::where("id", $data["trip_package_id"])->first();
-            if ($count == 0) {
-                return $response->Response("Cannot Read Package", null, 500);
-            } else {
-                $newArry = [];
+            if ($count > 0) {
+                 $newArry = [];
                 for ($i = 0; $i < $count; $i++) {
                     array_push($newArry, $travelerPackage[$i]->checkout_package->qty);
                 }

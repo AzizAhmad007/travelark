@@ -16,6 +16,7 @@ class PalaceController extends Controller
     }
     public function index()
     {
+        $response = new Responses;
         try {
             $data = Palace::with('user', 'tag', 'country', 'city', 'province')->get();
             foreach ($data as $key => $value) {
@@ -33,17 +34,9 @@ class PalaceController extends Controller
                     "description" => $value->description,
                 ];
             }
-            return response()->json([
-                "message" => "success",
-                'statusCode' => 200,
-                "data" => $dataTransform,
-            ]);
+            return $response->Response("success", $dataTransform, 200);
         } catch (\Throwable $th) {
-            return response()->json([
-                "message" => $th->getMessage(),
-                'statusCode' => 400,
-                "data" => null
-            ]);
+           return $response->Response($th->getMessage(), null, 500);
         }
     }
     public function store(Request $request)

@@ -16,6 +16,7 @@ class Instant_travelerController extends Controller
     }
     public function index()
     {
+        $response = new Responses;
         try {
             $data = InstantTravelModel::with('user', 'palace')->get();
             foreach ($data as $key => $value) {
@@ -27,17 +28,9 @@ class Instant_travelerController extends Controller
                     "image" => base64_encode($imageContent),
                 ];
             }
-            return response()->json([
-                "message" => "success",
-                'statusCode' => 200,
-                "data" => $dataTransform,
-            ]);
+            return $response->Response("success", $dataTransform, 200);
         } catch (\Throwable $th) {
-            return response()->json([
-                "message" => $th->getMessage(),
-                'statusCode' => 400,
-                "data" => null
-            ]);
+            return $response->Response($th->getMessage(), null, 400);
         }
     }
     public function store(Request $request)

@@ -160,9 +160,15 @@ Route::group([
 ], function ($router) {
 
     Route::get('destination', [GuestController::class, 'getAllInstantTravel']);
+    Route::get('package', [GuestController::class, 'package']);
     Route::get('destination-detail/{id}', [GuestController::class, 'instatTravelDetail']);
-    Route::get('package-destination', [GuestController::class, 'package']);
-    Route::get('package-destination-detail/{id}', [GuestController::class, 'packageDestinationDetail']);
+    Route::get('open-package-destination', [GuestController::class, 'openPackage']);
+    Route::get('private-package-destination', [GuestController::class, 'privatepackage']);
+    Route::get('open-destination-detail/{id}', [GuestController::class, 'openPackageDestinationDetail']);
+    Route::get('private-destination-detail/{id}', [GuestController::class, 'privatePackageDestinationDetail']);
+    Route::get('popular-destination', [GuestController::class, 'popularDestination']);
+    Route::get('popular-package', [GuestController::class, 'popularPackage']);
+    Route::post('ticket', [GuestController::class, 'ticketStore']);
     
    
 });
