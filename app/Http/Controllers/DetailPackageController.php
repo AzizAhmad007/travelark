@@ -15,8 +15,20 @@ class DetailPackageController extends Controller
 
     public function index()
     {
-        $data = DetailPackage::all();
-        return $data;
+        $response = new Responses;
+        try {
+            $data = DetailPackage::with('user', 'trip_package', 'checkout_package')->get();
+            foreach ($data as $key => $value) {
+                $dataTransform[] = [
+                'user_id' => $value->user->fullname,
+                'trip_packages_id' => $value->trip_package->type,
+                'checkout_package_id' => $value->checkout_package->transaction_number,
+                ];
+            }
+             return $response->Response("Success", $dataTransform, 200);
+        } catch (\Throwable $th) {
+             return $response->Response($th->getMessage(), null, 500);
+        }
     }
 
     public function store(Request $request)
@@ -24,9 +36,9 @@ class DetailPackageController extends Controller
         $response = new Responses;
         try {
             $data = $request->validate([
-                'user_id'=>'required',
-                'trip_packages_id'=>'required',
-                'checkout_package_id'=>'required',
+                'user_id'=>'required|numeric',
+                'trip_packages_id'=>'required|numeric',
+                'checkout_package_id'=>'required|numeric',
             ]);
 
             DetailPackage::create($data);
@@ -39,13 +51,12 @@ class DetailPackageController extends Controller
 
     public function show($id)
     {
+        $response = new Responses;
         $data = DetailPackage::find($id);
         if ($data === null || $data === []) {
-            return response()->json([
-                'message' => 'data not found'
-            ]);
+            return $response->Response("Data Not Found", null, 404);
         } else {
-            return $data;
+            return $response->Response("success", $data, 200);
         }
     }
 
@@ -54,9 +65,9 @@ class DetailPackageController extends Controller
         $response = new Responses;
         try {
             $isValidate = $request->validate([
-                'user_id'=>'required',
-                'trip_packages_id'=>'required',
-                'checkout_package_id'=>'required',
+                'user_id'=>'required|numeric',
+                'trip_packages_id'=>'required|numeric',
+                'checkout_package_id'=>'required|numeric',
             ]);
 
             $data = DetailPackage::find($id);

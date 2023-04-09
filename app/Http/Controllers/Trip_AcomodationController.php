@@ -19,6 +19,7 @@ class Trip_AcomodationController extends Controller
      */
     public function index()
     {
+        $response = new Responses;
         try {
             $data = Trip_AcomodationModel::with('trip_package')->get();
             foreach ($data as $key => $value) {
@@ -29,17 +30,9 @@ class Trip_AcomodationController extends Controller
                     "trip_package" => $value->trip_package,
                 ];
             }
-            return response()->json([
-                "message" => "success",
-                'statusCode' => 200,
-                "data" => $dataTransform,
-            ]);
+           return $response->Response("Success", $dataTransform, 200);
         } catch (\Throwable $th) {
-            return response()->json([
-                "message" => $th->getMessage(),
-                'statusCode' => 400,
-                "data" => null
-            ]);
+            return $response->Response($th->getMessage(), null, 500);
         }
     }
 
@@ -54,8 +47,8 @@ class Trip_AcomodationController extends Controller
         $response = new Responses;
         try {
             $isValidateData = $request->validate([
-                "name" => 'required',
-                "trip_package_id" => 'required',
+                "name" => 'required|min:3|max:100',
+                "trip_package_id" => 'required|numeric',
             ]);
             Trip_AcomodationModel::create($isValidateData);
             return $response->Response("success", $isValidateData, 200);
@@ -98,8 +91,8 @@ class Trip_AcomodationController extends Controller
         $response = new Responses;
         try {
             $isValidateData = $request->validate([
-                "name" => 'required',
-                "trip_package_id" => 'required',
+                "name" => 'required|min:3|max:100',
+                "trip_package_id" => 'required|numeric',
              ]);
             $getData = Trip_AcomodationModel::find($id);
             $getData->name = $isValidateData["name"];

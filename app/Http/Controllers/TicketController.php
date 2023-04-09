@@ -15,43 +15,24 @@ class TicketController extends Controller
     }
     public function index()
     {
-        return response()->json([
-            "message" => "success",
-            "statusCode" => 200,
-            "data" => Ticket::all(),
-        ]);
-    }
-    public function create()
-    {
-        //
-    }
-    public function store(Request $request)
-    {
-        $response = new Responses;
+       $response = new Responses;
         try {
-            $isValidateData = $request->validate([
-                "user_id" => 'required',
-                "first_name" => 'required',
-                "last_name" => 'required',
-                "email" => 'required',
-                "phone" => 'required',
-                "message" => 'required'
-            ]);
-            Ticket::create($isValidateData);
-           return $response->Response("success", $isValidateData, 200);
+            $data = Ticket::all();
+            return $response->Response("success", $data, 200);
         } catch (\Throwable $th) {
-           return $response->Response($th->getMessage(), null, 400);
+             return $response->Response($th->getMessage(), null, 500);
         }
     }
+
     public function show($id)
     {
         $response = new Responses;
-            $ticket = Ticket::find($id);
-            if ($ticket == null || $ticket === []) {
-                return $response->Response("Data Not Found", null, 404);
-            }else {
-                return $response->Response("success", $ticket, 200);
-            }
+        $ticket = Ticket::find($id);
+        if ($ticket == null || $ticket === []) {
+            return $response->Response("Data Not Found", null, 404);
+        } else {
+            return $response->Response("success", $ticket, 200);
+        }
     }
     public function delete($id)
     {

@@ -20,6 +20,7 @@ class TripPackageController extends Controller
      */
     public function index()
     {
+        $response = new Responses;
         try {
             $data = TripPackage::with('user', 'destination', 'guide')->get();
             foreach ($data as $key => $value) {
@@ -36,17 +37,9 @@ class TripPackageController extends Controller
                     "departure_time" => $value->departure_time
                 ];
             }
-            return response()->json([
-                "message" => "success",
-                'statusCode' => 200,
-                "data" => $dataTransform,
-            ]);
+           return $response->Response("success", $dataTransform, 200);
         } catch (\Throwable $th) {
-            return response()->json([
-                "message" => $th->getMessage(),
-                'statusCode' => 400,
-                "data" => null
-            ]);
+            return $response->Response($th->getMessage(), null, 500);
         }
     }
 
@@ -72,12 +65,12 @@ class TripPackageController extends Controller
         try {
             $isValidateData = $request->validate([
                 "created_by" => 'required|numeric',
-                "type" => 'required',
+                "type" => 'required|in:open,private',
                 "destination_id" => 'required',
-                "guide_id" => 'required',
-                "duration" => 'required',
-                "quota" => 'required',
-                "departure_time" => 'required',
+                "guide_id" => 'required|numeric',
+                "duration" => 'required|numeric',
+                "quota" => 'required|numeric',
+                "departure_time" => 'required|date',
                 "price" => 'required|min:3|max:100',
             ]);
             TripPackage::create($isValidateData);
@@ -139,12 +132,12 @@ class TripPackageController extends Controller
         try {
             $isValidateData = $request->validate([
                "created_by" => 'required|numeric',
-                "type" => 'required',
+                "type" => 'required|in:open,private',
                 "destination_id" => 'required',
-                "guide_id" => 'required',
-                "duration" => 'required',
-                "quota" => 'required',
-                "departure_time" => 'required',
+                "guide_id" => 'required|numeric',
+                "duration" => 'required|numeric',
+                "quota" => 'required|numeric',
+                "departure_time" => 'required|date',
                 "price" => 'required|min:3|max:100',
             ]);
             $getData = TripPackage::find($id);

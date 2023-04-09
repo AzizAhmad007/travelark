@@ -36,8 +36,8 @@ class FeaturedTripController extends Controller
         $response = new Responses;
         try {
             $isValidateData = $request->validate([
-                "name" => 'required',
-                "trip_package_id" => 'required',
+                "name" => 'required|min:3|max:100',
+                "trip_package_id" => 'required|numeric',
             ]);
             FeaturedTrip::create($isValidateData);
             return $response->Response("success", $isValidateData, 200);
@@ -51,8 +51,8 @@ class FeaturedTripController extends Controller
         $response = new Responses;
         try {
             $isValidateData = $request->validate([
-                "name" => 'required',
-                "trip_package_id" => 'required',
+                "name" => 'required|min:3|max:100',
+                "trip_package_id" => 'required|numeric',
              ]);
             $getData = FeaturedTrip::find($id);
             $getData->name = $isValidateData["name"];
