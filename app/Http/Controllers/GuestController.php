@@ -192,7 +192,13 @@ class GuestController extends Controller
         $totalShow = count($show);
         if (!$checkData == []) {
             $imageContent = Storage::get($checkData->destination->image);
-
+            $allImages = Destination_detail::where('destination_id', $checkData->destination_id)->pluck('image');
+            foreach ($allImages as $key => $value) {
+                $imageContent = Storage::get($value);
+                $dataTransform[] = [
+                "image" => base64_encode($imageContent)
+                ];
+            }
 
             $setData = [
                 "id" => $checkData->id,
@@ -210,7 +216,7 @@ class GuestController extends Controller
                     "image" => base64_encode($imageContent),
                     "destination_name" => $checkData->destination->destination_name,
                     "description" => $checkData->destination->description,
-                    "all_image" => Destination_detail::where('destination_id', $checkData->destination_id)->pluck('image'),
+                    "all_image" => $dataTransform
                 ],
                 "featured_trip" => FeaturedTrip::where("trip_package_id", $checkData->id)->pluck('name'),
                 "acomodation" => Trip_AcomodationModel::where('trip_package_id', $checkData->id)->pluck('name'),
@@ -246,7 +252,13 @@ class GuestController extends Controller
                     $paxAvailable = 0;
                 }
             }
-
+            $allImages = Destination_detail::where('destination_id', $checkData->destination_id)->pluck('image');
+            foreach ($allImages as $key => $value) {
+                 $imageContent = Storage::get($value);
+                $dataTransform[] = [
+                "image" => base64_encode($imageContent)
+                ];
+            }
 
             $setData = [
                 "id" => $checkData->id,
@@ -265,7 +277,7 @@ class GuestController extends Controller
                     "image" => base64_encode($imageContent),
                     "destination_name" => $checkData->destination->destination_name,
                     "description" => $checkData->destination->description,
-                    "all_image" => Destination_detail::where('destination_id', $checkData->destination_id)->pluck('image'),
+                    "all_image" => $dataTransform,
                 ],
                 "featured_trip" => FeaturedTrip::where("trip_package_id", $checkData->id)->pluck('name'),
                 "acomodation" => Trip_AcomodationModel::where('trip_package_id', $checkData->id)->pluck('name'),

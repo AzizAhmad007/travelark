@@ -9,6 +9,7 @@ use App\Http\Controllers\DetailPackageController;
 use App\Http\Controllers\GuideController;
 use App\Http\Controllers\CitiController;
 use App\Http\Controllers\CountryController;
+use App\Http\Controllers\FeaturedTripController;
 use App\Http\Controllers\GuestController;
 use App\Http\Controllers\Instant_travelerController;
 use App\Http\Controllers\PalaceController;
@@ -154,6 +155,18 @@ Route::group([
     Route::put('update-trip-acomodation/{id}', [Trip_AcomodationController::class, 'update']);
     Route::delete('delete-trip-acomodation/{id}', [Trip_AcomodationController::class, 'destroy']);
     Route::post('insert-trip-acomodation', [Trip_AcomodationController::class, 'store']);
+});
+
+Route::group([
+    'middleware' => 'IsAdmin',
+    'prefix' => 'featured-trip'
+
+], function ($router) {
+
+    Route::get('featured-trip', [FeaturedTripController::class, 'index']);
+    Route::put('update-featured-trip/{id}', [FeaturedTripController::class, 'update']);
+    Route::delete('delete-featured-trip/{id}', [FeaturedTripController::class, 'destroy']);
+    Route::post('insert-featured-trip', [FeaturedTripController::class, 'store']);
 });
 Route::group([
     'prefix' => 'guest'
