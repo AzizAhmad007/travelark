@@ -28,10 +28,10 @@ class GuestController extends Controller
                 $imageContent = Storage::get($value->image);
                 $dataTransform[] = [
                     "id" => $value->id,
-                    "tag_id" => $value->tag->name,
-                    "country_id" => $value->country->name,
-                    "city_id" => $value->city->name,
-                    "province_id" => $value->province->name,
+                    "tag" => $value->tag->name,
+                    "country" => $value->country->name,
+                    "city" => $value->city->name,
+                    "province" => $value->province->name,
                     "palace_name" => $value->palace_name,
                     "image" => base64_encode($imageContent),
                 ];
@@ -53,10 +53,10 @@ class GuestController extends Controller
 
             $setData = [
                 "id" => $checkData->id,
-                "tag_id" => $checkData->tag->name,
-                "country_id" => $checkData->country->name,
+                "tag" => $checkData->tag->name,
+                "country" => $checkData->country->name,
                 "city_id" => $checkData->city->name,
-                "province_id" => $checkData->province->name,
+                "province" => $checkData->province->name,
                 "palace_name" => $checkData->palace_name,
                 "image" => base64_encode($imageContent),
                 "price" => $checkData->price,

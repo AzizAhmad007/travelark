@@ -25,7 +25,7 @@ class DestinationController extends Controller
             $imageContent = Storage::get($value->image);
                $dataTransform[] = [
                     "id" => $value->id,
-                    "user_id" => $value->user->fullname,
+                    "user_id" => $value->user->username,
                     "tag_id" => $value->tag->name,
                     "country_id" => $value->country->name,
                     "city_id" => $value->city->name,
