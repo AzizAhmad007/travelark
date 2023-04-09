@@ -20,8 +20,37 @@ class Checkout_instant_travel_sumaryController extends Controller
     }
     public function index()
     {
-        $checkout_instant_travel_sumary = Checkout_instant_travel_sumary::all();
-        return $checkout_instant_travel_sumary;
+        $response = new Responses;
+        try {
+            $data = Checkout_instant_travel_sumary::all();
+        foreach ($data as $key => $value) {
+            $dataTransform[] = [
+                "transaction_number" => $value->transaction_number,
+                "Date" => Carbon::createFromTimestamp($value->created_at)->toDateTimeString(),
+                "status" => "Success",
+                "Category" => "Destination",
+                "destination" => [
+                    "name" => $value->palace->palace_name,
+                    "tag" => $value->palace->tag->name,
+                    "city" => $value->palace->city->name,
+                    "province" => $value->palace->province->name,
+                    "country" => $value->palace->country->name,
+                ],
+                "ticket_date" => $value->ticket_date,
+                "qty" => $value->qty,
+                "price" => $value->palace->price,
+                "total_price" => $value->total_price,
+                "firstname" => $value->firstname,
+                "lastname" => $value->lastname,
+                "email" => $value->email,
+                "phone_number" => $value->phone_number
+            ];
+        }
+         return $response->Response("success", $dataTransform, 200);
+        } catch (\Throwable $th) {
+           return $response->Response($th->getMessage(), null, 500);
+        }
+        
     }
 
     public function store(Request $request)
@@ -29,15 +58,15 @@ class Checkout_instant_travel_sumaryController extends Controller
         $response = new Responses;
         try {
             $checkout_instant_travel_sumary = $request->validate([
-                'user_id' => 'required',
-                'palace_id' => 'required',
-                'total_price' => 'required',
-                'firstname' => 'required',
-                'lastname' => 'required',
-                'email' => 'required',
-                'phone_number' => 'required',
-                'ticket_date' => 'required',
-                'qty' => 'required'
+                'user_id' => 'required|numeric',
+                'palace_id' => 'required|numeric',
+                'total_price' => 'required|numeric',
+                'firstname' => 'required|min:3|max:100',
+                'lastname' => 'required|min:3|max:100',
+                'email' => 'required|min:3|max:100',
+                'phone_number' => 'required|min:3|max:13',
+                'ticket_date' => 'required|date',
+                'qty' => 'required|numeric'
             ]);
             $transactionNumber = Str::random(10).uniqid();
             $checkout_instant_travel_sumary['transaction_number'] = $transactionNumber;
@@ -73,43 +102,56 @@ class Checkout_instant_travel_sumaryController extends Controller
 
     public function show($id)
     {
+        $response = new Responses;
         try {
             $checkdata = Checkout_instant_travel_sumary::find($id);
-            if ($checkdata == null) {
-                throw new Exception('Data tidak Ditemukan');
+            if ($checkdata == null || $checkdata == []) {
+                return $response->Response("Data Not Found", null, 404);
             } else {
 
                 $checkout_instant_travel_sumary = [
-                    'user_id' => $checkdata->user_id,
-                    'instant_travel_id' => $checkdata->instant_travel_id,
-                    'total_price' => $checkdata->total_price,
-                    'checkout_id' => $checkdata->checkout_id
+                    "transaction_number" => $checkdata->transaction_number,
+                    "Date" => Carbon::createFromTimestamp($checkdata->created_at)->toDateTimeString(),
+                    "status" => "Success",
+                    "Category" => "Destination",
+                    "destination" => [
+                        "name" => $checkdata->palace->palace_name,
+                        "tag" => $checkdata->palace->tag->name,
+                        "city" => $checkdata->palace->city->name,
+                        "province" => $checkdata->palace->province->name,
+                        "country" => $checkdata->palace->country->name,
+                    ],
+                    "ticket_date" => $checkdata->ticket_date,
+                    "qty" => $checkdata->qty,
+                    "price" => $checkdata->palace->price,
+                    "total_price" => $checkdata->total_price,
+                    "firstname" => $checkdata->firstname,
+                    "lastname" => $checkdata->lastname,
+                    "email" => $checkdata->email,
+                    "phone_number" => $checkdata->phone_number
                 ];
             }
 
-            return response()->json([
-                'message' => 'Data ditemukan',
-                'statusCode' => 200,
-                'data' => $checkout_instant_travel_sumary
-            ]);
+            return $response->Response("success", $checkout_instant_travel_sumary, 200);
         } catch (Exception $e) {
-            return response()->json([
-                'message' => $e,
-                'error' => 'Data tidak ditemukan',
-                'statusCode' => 400,
-                'data' => null
-            ]);
+           return $response->Response("Data Not Found", null, 404);
         }
     }
 
     public function update(Request $request, $id)
     {
+        $response = new Responses;
         try{
             $checkout_instant_travel_sumary = $request->validate([
-                'user_id' => 'required',
-                'instant_travel_id' => 'required',
-                'total_price' => 'required',
-                'checkout_id' => 'required'
+                'user_id' => 'required|numeric',
+                'palace_id' => 'required|numeric',
+                'total_price' => 'required|numeric',
+                'firstname' => 'required|min:3|max:100',
+                'lastname' => 'required|min:3|max:100',
+                'email' => 'required|min:3|max:100',
+                'phone_number' => 'required|min:3|max:13',
+                'ticket_date' => 'required|date',
+                'qty' => 'required|numeric'
             ]);
 
             $checkout_instant_travel_sumary = Checkout_instant_travel_sumary::find($id);
@@ -117,48 +159,35 @@ class Checkout_instant_travel_sumaryController extends Controller
 
             $checkout_instant_travel_sumary->update([
                 'user_id' => $request->user_id,
-                'instant_travel_id' => $request->instant_travel_id,
+                'palace_id' => $request->palace_id,
                 'total_price' => $request->total_price,
-                'checkout_id' => $request->checkout
+                'firstname' => $request->firstname,
+                'lastname' => $request->lastname,
+                'email' => $request->email,
+                'phone_number' => $request->phone_number,
+                'ticket_date' => $request->ticket_date,
+                'qty' => $request->qty,
             ]);
 
-            return response()->json([
-                'message' => 'update success',
-                'statusCode' => 200,
-                'data' => $data
-            ]);
+           return $response->Response("success", $data, 200);
         } catch(Exception $e) {
-            return response()->json([
-                'message' => $e,
-                //'error' => $e->getMessage(),
-                'error' => 'Terjadi kesalahan',
-                'statusCode' => 400,
-                'data' => null
-            ]);
+            return $response->Response($e->getMessage(), null, 400);
         }
     }
 
     public function destroy($id)
     {
+        $response = new Responses;
         try {
             $checkout_instant_travel_sumary = Checkout_instant_travel_sumary::find($id);
             if ($checkout_instant_travel_sumary == null) {
-                throw new Exception('Data tidak ditemukan');
+                return $response->Response("Data Not Found", null, 404);
             }
 
             $checkout_instant_travel_sumary->delete();
-            return response()->json([
-                'message' => 'delete success',
-                'statusCode' => 200,
-                'data' => $checkout_instant_travel_sumary
-            ]);
+            return $response->Response("success", $checkout_instant_travel_sumary, 200);
         } catch (Exception $e) {
-            return response()->json([
-                'message' => $e,
-                'error' => 'Data tidak ditemukan',
-                'statusCode' => 400,
-                'data' => null
-            ]);
+            return $response->Response($e->getMessage(), null, 404);
         }
     }
 }

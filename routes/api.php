@@ -56,83 +56,83 @@ Route::group([
     Route::post('insert-guide', [GuideController::class, 'store']);
 });
 Route::group([
-
+    'middleware' => 'IsAdmin',
     'prefix' => 'palace'
 
 ], function ($router) {
 
-    Route::post('insert-palace', [PalaceController::class, 'store'])->middleware('IsAdmin');
+    Route::post('insert-palace', [PalaceController::class, 'store']);
     Route::get('palace', [PalaceController::class, 'index']);
-    Route::get('detail-palace/{id}', [PalaceController::class, 'show'])->middleware('IsAdmin');
-    Route::post('update-palace/{id}', [PalaceController::class, 'update'])->middleware('IsAdmin');
-    Route::delete('palace/{id}', [PalaceController::class, 'delete'])->middleware('IsAdmin');
+    Route::get('detail-palace/{id}', [PalaceController::class, 'show']);
+    Route::post('update-palace/{id}', [PalaceController::class, 'update']);
+    Route::delete('palace/{id}', [PalaceController::class, 'delete']);
 });
 Route::group([
-
+    'middleware' => 'IsAdmin',
     'prefix' => 'ticket'
 
 ], function ($router) {
 
 
-    Route::get('ticket', [TicketController::class, 'index'])->middleware('IsAdmin');
-    Route::post('insert-ticket', [TicketController::class, 'store'])->middleware('IsTraveler');
-    Route::get('detail-ticket/{id}', [TicketController::class, 'show'])->middleware('IsAdmin');
-    Route::delete('delete-ticket/{id}', [TicketController::class, 'delete'])->middleware('IsAdmin');
+    Route::get('ticket', [TicketController::class, 'index']);
+    Route::get('detail-ticket/{id}', [TicketController::class, 'show']);
+    Route::delete('delete-ticket/{id}', [TicketController::class, 'delete']);
 });
 Route::group([
-
+    'middleware' => 'IsAdmin',
     'prefix' => 'instant-travel'
 
 ], function ($router) {
 
     Route::get('instant-travel',  [Instant_travelerController::class, 'index']);
-    Route::get('detail-instant-travel/{id}',  [Instant_travelerController::class, 'show'])->middleware('IsAdmin');
-    Route::post('insert-instant-travel',  [Instant_travelerController::class, 'store'])->middleware('IsAdmin');
-    Route::put('update-instant-travel/{id}',  [Instant_travelerController::class, 'update'])->middleware('IsAdmin');
-    Route::delete('delete-instant-travel/{id}',  [Instant_travelerController::class, 'delete'])->middleware('IsAdmin');
+    Route::get('detail-instant-travel/{id}',  [Instant_travelerController::class, 'show']);
+    Route::post('insert-instant-travel',  [Instant_travelerController::class, 'store']);
+    Route::put('update-instant-travel/{id}',  [Instant_travelerController::class, 'update']);
+    Route::delete('delete-instant-travel/{id}',  [Instant_travelerController::class, 'delete']);
 });
 Route::group([
-
+    'middleware' => 'IsAdmin',
     'prefix' => 'trip-package'
 
 ], function ($router) {
 
 
     Route::get('trip-package',  [TripPackageController::class, 'index']);
-    Route::get('detail-trip-package/{id}',  [TripPackageController::class, 'show'])->middleware('IsAdmin');
+    Route::get('detail-trip-package/{id}',  [TripPackageController::class, 'show']);
     Route::post('insert-trip-package',  [TripPackageController::class, 'store']);
-    Route::put('update-trip-package/{id}',  [TripPackageController::class, 'update'])->middleware('IsAdmin');
-    Route::delete('delete-trip-package/{id}',  [TripPackageController::class, 'delete'])->middleware('IsAdmin');
+    Route::put('update-trip-package/{id}',  [TripPackageController::class, 'update']);
+    Route::delete('delete-trip-package/{id}',  [TripPackageController::class, 'delete']);
 });
 Route::group([
-
+    'middleware' => 'IsAdmin',
     'prefix' => 'destination'
 
 ], function ($router) {
 
 
-    Route::post('insert-destination', [DestinationController::class, 'store'])->middleware('IsAdmin');
-    Route::post('update-destination/{id}', [DestinationController::class, 'update'])->middleware('IsAdmin');
-    Route::get('detail-destination/{id}', [DestinationController::class, 'show'])->middleware('IsAdmin');
+    Route::post('insert-destination', [DestinationController::class, 'store']);
+    Route::post('update-destination/{id}', [DestinationController::class, 'update']);
+    Route::get('detail-destination/{id}', [DestinationController::class, 'show']);
     Route::get('destination', [DestinationController::class, 'index']);
-    Route::delete('delete-destination/{id}', [DestinationController::class, 'destroy'])->middleware('IsAdmin');
+    Route::delete('delete-destination/{id}', [DestinationController::class, 'destroy']);
 });
 Route::group([
-
+    'middleware' => 'IsAdmin',
     'prefix' => 'destination-detail'
 
 ], function ($router) {
 
 
-    Route::get('destination-detail', [Destination_detailController::class, 'index'])->middleware('IsAdmin');
+    Route::get('destination-detail', [Destination_detailController::class, 'index']);
     Route::get('detail-destination-detail/{id}', [Destination_detailController::class, 'show']);
-    Route::post('insert-destination-detail', [Destination_detailController::class, 'store'])->middleware('IsAdmin');
-    Route::put('update-destination-detail/{id}', [Destination_detailController::class, 'update'])->middleware('IsAdmin');
-    Route::delete('delete-destination-detail/{id}', [Destination_detailController::class, 'destroy'])->middleware('IsAdmin');
+    Route::post('insert-destination-detail', [Destination_detailController::class, 'store']);
+    Route::put('update-destination-detail/{id}', [Destination_detailController::class, 'update']);
+    Route::delete('delete-destination-detail/{id}', [Destination_detailController::class, 'destroy']);
 });
 
 
 Route::group([
+    'middleware' => 'IsAdmin',
     'prefix' => 'detail-package'
 ], function ($router) {
     Route::get('detail-package', [DetailPackageController::class, 'index']);
@@ -144,6 +144,7 @@ Route::group([
 
 
 Route::group([
+    'middleware' => 'IsAdmin',
     'prefix' => 'trip-acomodation'
 
 ], function ($router) {
@@ -177,8 +178,16 @@ Route::group([
 
 ], function ($router) {
 
-   Route::post('checkout-destination', [Checkout_instant_travel_sumaryController::class, 'store']);
-   Route::post('checkout-package', [Checkout_package_travel_sumaryController::class, 'store']);
+   Route::post('insert-checkout-destination', [Checkout_instant_travel_sumaryController::class, 'store'])->middleware("IsTraveler");
+   Route::post('insert-checkout-package', [Checkout_package_travel_sumaryController::class, 'store'])->middleware("IsTraveler");
+   Route::put('update-checkout-destination', [Checkout_instant_travel_sumaryController::class, 'update'])->middleware("IsAdmin");
+   Route::put('update-checkout-package', [Checkout_package_travel_sumaryController::class, 'update'])->middleware("IsAdmin");
+   Route::get('checkout-destination', [Checkout_instant_travel_sumaryController::class, 'index'])->middleware("IsAdmin");
+   Route::get('checkout-package', [Checkout_package_travel_sumaryController::class, 'index'])->middleware("IsAdmin");
+   Route::get('detail-checkout-destination', [Checkout_instant_travel_sumaryController::class, 'show'])->middleware("IsAdmin");
+   Route::get('detail-checkout-package', [Checkout_package_travel_sumaryController::class, 'show'])->middleware("IsAdmin");
+   Route::delete('delete-checkout-destination', [Checkout_instant_travel_sumaryController::class, 'destroy'])->middleware("IsAdmin");
+   Route::delete('delete-checkout-package', [Checkout_package_travel_sumaryController::class, 'delete'])->middleware("IsAdmin");
    
 });
 
