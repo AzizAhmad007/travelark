@@ -18,8 +18,22 @@ class Destination_detailController extends Controller
     }
     public function index()
     {
-        $destination_detail = Destination_detail::all();
-        return $destination_detail;
+        $response = new Responses;
+        try {
+            $data = Destination_detail::with('destintaion')->get();
+            foreach ($data as $key => $value) {
+                $imageContent = Storage::get($value->image);
+                $dataTransform[] = [
+                    "id" => $value->id,
+                    "detination" => $value->destintaion->destination_name, 
+                    "image" => base64_encode($imageContent),
+                ];
+            }
+             return $response->Response("Success", $dataTransform, 200);
+        } catch (\Throwable $th) {
+             return $response->Response($th->getMessage(), null, 500);
+        }
+         
     }
 
     public function show($id)
@@ -32,10 +46,10 @@ class Destination_detailController extends Controller
             $imageContent = Storage::get($destination_detail->image);
             $setData = [
                 "id" => $destination_detail->id,
-                "destination" => Destination::where('id', $destination_detail->destination_id),
+                "destination" => $destination_detail->destination->destination_name,
                 "image" => base64_encode($imageContent),
             ];
-            return $response->Response("Success", $destination_detail, 200);
+            return $response->Response("Success", $setData, 200);
         }
     }
 
@@ -44,13 +58,13 @@ class Destination_detailController extends Controller
         $response = new Responses;
         try {
             $destination_detail = $request->validate([
-                'name' => 'required',
-                'destination_id' => 'required',
+                'name' => 'required|min:3|max:100',
+                'destination_id' => 'required|numeric',
                 "image" => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             ]);
             $image = $request->file('image');
             $path = $image->store('public/destinations');
-            $isValidateData['image'] = $path;
+            $destination_detail['image'] = $path;
             Destination_detail::create($destination_detail);
             return $response->Response("Success", $destination_detail, 200);
         } catch (Exception $e) {
@@ -62,17 +76,23 @@ class Destination_detailController extends Controller
     {
         $response = new Responses;
         try {
-            $destination_detail = $request->validate([
-                'name' => 'required',
-                'destination_id' => 'required',
+            $isValidate = $request->validate([
+                'name' => 'required|min:3|max:100',
+                'destination_id' => 'required|numeric',
                 "image" => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             ]);
 
             $destination_detail = Destination_detail::find($id);
-            $data = $request->all();
-            $destination_detail->update($data);
+            $image = $request->file('image');
+            $path = $image->store('public/destinations');
+            $pathDelete = $destination_detail->image;
+            Storage::delete($pathDelete);
+            $destination_detail->name = $isValidate["name"];
+            $destination_detail->destination_id = $isValidate["destination_id"];
+            $destination_detail->image = $path;
+            $destination_detail->save();
 
-            return $response->Response("Success", $data, 200);
+            return $response->Response("Success", $isValidate, 200);
         } catch (Exception $e) {
             return $response->Response($e->getMessage(), null, 500);
         }

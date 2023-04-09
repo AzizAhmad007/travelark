@@ -50,7 +50,7 @@ class GuideController extends Controller
         $response = new Responses;
         try {
             $isValidateData = $request->validate([
-                "name" => 'required',
+                "name" => 'required|min:3|max:100',
             ]);
             Guide::create($isValidateData);
             return $response->Response("success", $isValidateData, 200);
@@ -90,7 +90,7 @@ class GuideController extends Controller
         $response = new Responses;
         try {
             $isValidateData = $request->validate([
-                "name" => 'required',
+                "name" => 'required|min:3|max:100',
             ]);
             $guide->update($isValidateData);
             return $response->Response("success", $isValidateData, 200);

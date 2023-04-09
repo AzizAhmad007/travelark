@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Responses\Responses;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
@@ -22,6 +23,7 @@ class AuthController extends Controller
 
     public function register()
     {
+        $response = new Responses;
         $validator = Validator::make(request()->all(), [
             'username' => 'required|unique:users',
             'email' => 'required|email|unique:users',
@@ -44,17 +46,9 @@ class AuthController extends Controller
         ]);
 
         if ($user) {
-            return response()->json([
-                'message' => 'user created',
-                'statusCode' => 200,
-                "data" => request()->all()
-            ]);
+            return $response->Response("user created", request()->all(), 200);
         } else {
-            return response()->json([
-                'message' => 'faileduser created',
-                'statusCode' => 400,
-                "data" => null
-            ]);
+            return $response->Response("faild user created", null, 400);
         }
     }
 
@@ -65,6 +59,7 @@ class AuthController extends Controller
      */
     public function login()
     {
+        $response = new Responses;
         $credentials = request(['username', 'password']);
         try {
             if (!$token = auth()->attempt($credentials)) {
@@ -76,11 +71,7 @@ class AuthController extends Controller
             // $tokenAfterEncrypt = Crypt::encryptString($token);
             return $this->respondWithToken($token);
         } catch (\Throwable $th) {
-            return response()->json([
-                "message" => $th->getMessage(),
-                'statusCode' => 400,
-                "data" => null
-            ]);
+            return $response->Response($th->getMessage(), null, 400);
         }
     }
 

@@ -18,8 +18,29 @@ class DestinationController extends Controller
     }
     public function index()
     {
-        $destination = Destination::all();
-        return $destination;
+        $response = new Responses;
+        try {
+            $data = Destination::with('user', 'tag', 'country', 'city', 'province')->get();
+            foreach ($data as $key => $value) {
+            $imageContent = Storage::get($value->image);
+               $dataTransform[] = [
+                    "id" => $value->id,
+                    "user_id" => $value->user->fullname,
+                    "tag_id" => $value->tag->name,
+                    "country_id" => $value->country->name,
+                    "city_id" => $value->city->name,
+                    "province_id" => $value->province->name,
+                    "destination_name" => $value->destination_name,
+                    "image" => base64_encode($imageContent),
+                    "price" => $value->price,
+                    "private_price" => $value->private_price,
+                    "description" => $value->description,
+                ];
+            }
+             return $response->Response("Success", $dataTransform, 200);
+        } catch (\Throwable $th) {
+             return $response->Response($th->getMessage(), null, 500);
+        }
     }
 
     public function store(Request $request)
@@ -27,16 +48,16 @@ class DestinationController extends Controller
         $response = new Responses;
         try {
             $destination = $request->validate([
-                'user_id' => 'required',
-                'tag_id' => 'required',
-                'country_id' => 'required',
-                'city_id' => 'required',
-                'province_id' => 'required',
-                'destination_name' => 'required',
-                'image' => 'required|image|mimes:jpeg,jpg,png|max:2000',
-                'price' => 'required',
+                'user_id' => 'required|numeric',
+                'tag_id' => 'required|numeric',
+                'country_id' => 'required|numeric',
+                'city_id' => 'required|numeric',
+                'province_id' => 'required|numeric',
+                'destination_name' => 'required|min:3|max:100',
+                'image' => 'required|image|mimes:jpeg,jpg,png|max:2048',
+                'price' => 'required|numeric|max:7',
                 'description' => 'required',
-                'private_price' => 'required'
+                'private_price' => 'required|numeric|max:7'
             ]);
 
             $image = $request->file('image');
@@ -83,16 +104,16 @@ class DestinationController extends Controller
         $response = new Responses;
         try {
             $request->validate([
-                'user_id' => 'required',
-                'tag_id' => 'required',
-                'country_id' => 'required',
-                'city_id' => 'required',
-                'province_id' => 'required',
-                'destination_name' => 'required',
-                'image' => 'required',
-                'price' => 'required',
+                'user_id' => 'required|numeric',
+                'tag_id' => 'required|numeric',
+                'country_id' => 'required|numeric',
+                'city_id' => 'required|numeric',
+                'province_id' => 'required|numeric',
+                'destination_name' => 'required|min:3|max:100',
+                'image' => 'required|image|mimes:jpeg,jpg,png|max:2048',
+                'price' => 'required|numeric|max:7',
                 'description' => 'required',
-                'private_price' => 'required'
+                'private_price' => 'required|numeric|max:7'
             ]);
 
             $destination = Destination::find($id);

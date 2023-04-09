@@ -15,7 +15,6 @@ return new class extends Migration
     {
         Schema::create('tickets', function (Blueprint $table) {
             $table->id();
-             $table->foreignId('user_id')->references('id')->on('users');
             $table->string('first_name');
             $table->string('last_name');
             $table->string('email');
