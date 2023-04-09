@@ -20,12 +20,13 @@ class Destination_detailController extends Controller
     {
         $response = new Responses;
         try {
-            $data = Destination_detail::with('destintaion')->get();
+            $data = Destination_detail::with('destination')->get();
             foreach ($data as $key => $value) {
                 $imageContent = Storage::get($value->image);
                 $dataTransform[] = [
                     "id" => $value->id,
-                    "detination" => $value->destintaion->destination_name, 
+                    "name" => $value->name,
+                    "detination" => $value->destination->destination_name, 
                     "image" => base64_encode($imageContent),
                 ];
             }
@@ -46,6 +47,7 @@ class Destination_detailController extends Controller
             $imageContent = Storage::get($destination_detail->image);
             $setData = [
                 "id" => $destination_detail->id,
+                "name" => $destination_detail->name,
                 "destination" => $destination_detail->destination->destination_name,
                 "image" => base64_encode($imageContent),
             ];

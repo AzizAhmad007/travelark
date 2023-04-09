@@ -55,9 +55,9 @@ class DestinationController extends Controller
                 'province_id' => 'required|numeric',
                 'destination_name' => 'required|min:3|max:100',
                 'image' => 'required|image|mimes:jpeg,jpg,png|max:2048',
-                'price' => 'required|numeric|max:7',
+                'price' => 'required|numeric',
                 'description' => 'required',
-                'private_price' => 'required|numeric|max:7'
+                'private_price' => 'required|numeric'
             ]);
 
             $image = $request->file('image');
@@ -111,9 +111,9 @@ class DestinationController extends Controller
                 'province_id' => 'required|numeric',
                 'destination_name' => 'required|min:3|max:100',
                 'image' => 'required|image|mimes:jpeg,jpg,png|max:2048',
-                'price' => 'required|numeric|max:7',
+                'price' => 'required|numeric',
                 'description' => 'required',
-                'private_price' => 'required|numeric|max:7'
+                'private_price' => 'required|numeric'
             ]);
 
             $destination = Destination::find($id);
