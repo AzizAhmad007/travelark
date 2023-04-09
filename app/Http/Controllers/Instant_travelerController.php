@@ -23,7 +23,7 @@ class Instant_travelerController extends Controller
                 $imageContent = Storage::get($value->image);
                 $dataTransform[] = [
                     "id" => $value->id,
-                    "user_id" => $value->user->fullname,
+                    "user_id" => $value->user->username,
                     "palace_id" => $value->palace->palace_name,
                     "image" => base64_encode($imageContent),
                 ];
@@ -98,7 +98,7 @@ class Instant_travelerController extends Controller
              $imageContent = Storage::get($checkData->image);
             $setData = [
                 "id" => $checkData->id,
-                "user_id" => $checkData->user->fullname,
+                "user_id" => $checkData->user->username,
                 "palace_id" => $checkData->palace->palace_name,
                 "image" => base64_encode($imageContent),
             ];

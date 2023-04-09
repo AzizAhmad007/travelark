@@ -27,7 +27,7 @@ class TripPackageController extends Controller
 
                 $dataTransform[] = [
                     "id" => $value->id,
-                    "created_by" => $value->user->fullname,
+                    "created_by" => $value->user->username,
                     "type" => $value->type,
                     "destination_id" =>$value->destination->destination_name,
                     "guide_id" => $value->guide->name,
@@ -93,7 +93,7 @@ class TripPackageController extends Controller
         if (!$checkData == []) {
             $setData = [
                     "id" => $checkData->id,
-                    "created_by" => $checkData->user->fullname,
+                    "created_by" => $checkData->user->username,
                     "type" => $checkData->type,
                     "destination_id" =>$checkData->destination->name,
                     "guide_id" => $checkData->guide->name,
