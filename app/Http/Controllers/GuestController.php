@@ -48,6 +48,13 @@ class GuestController extends Controller
         $checkData  = Palace::find($id);
         $show = Checkout_instant_travel_sumary::where('palace_id', $checkData->id)->get();
         $totalShow = count($show);
+        $allImages = InstantTravelModel::where("palace_id", $id)->pluck('image');
+            foreach ($allImages as $key => $value) {
+                 $imageContent = Storage::get($value);
+                $dataTransform[] = [
+                "image" => base64_encode($imageContent)
+                ];
+            }
         if (!$checkData == []) {
             $imageContent = Storage::get($checkData->image);
 
@@ -61,9 +68,9 @@ class GuestController extends Controller
                 "image" => base64_encode($imageContent),
                 "price" => $checkData->price,
                 "description" => $checkData->description,
-                "showing" => $totalShow,
+                "review" => $totalShow,
                 "rating" => 5,
-                "all_image" => InstantTravelModel::where("palace_id", $id)->pluck('image')
+                "all_image" => $dataTransform
             ];
             return $response->Response("success", $setData, 200);
         } else {
