@@ -88,7 +88,7 @@ Route::group([
     Route::get('instant-travel',  [Instant_travelerController::class, 'index']);
     Route::get('detail-instant-travel/{id}',  [Instant_travelerController::class, 'show']);
     Route::post('insert-instant-travel',  [Instant_travelerController::class, 'store']);
-    Route::put('update-instant-travel/{id}',  [Instant_travelerController::class, 'update']);
+    Route::post('update-instant-travel/{id}',  [Instant_travelerController::class, 'update']);
     Route::delete('delete-instant-travel/{id}',  [Instant_travelerController::class, 'delete']);
 });
 Route::group([
@@ -127,7 +127,7 @@ Route::group([
     Route::get('destination-detail', [Destination_detailController::class, 'index']);
     Route::get('detail-destination-detail/{id}', [Destination_detailController::class, 'show']);
     Route::post('insert-destination-detail', [Destination_detailController::class, 'store']);
-    Route::put('update-destination-detail/{id}', [Destination_detailController::class, 'update']);
+    Route::post('update-destination-detail/{id}', [Destination_detailController::class, 'update']);
     Route::delete('delete-destination-detail/{id}', [Destination_detailController::class, 'destroy']);
 });
 

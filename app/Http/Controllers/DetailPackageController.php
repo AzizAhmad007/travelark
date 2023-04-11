@@ -20,9 +20,9 @@ class DetailPackageController extends Controller
             $data = DetailPackage::with('user', 'trip_package', 'checkout_package')->get();
             foreach ($data as $key => $value) {
                 $dataTransform[] = [
-                'user_id' => $value->user->username,
-                'trip_packages_id' => $value->trip_package->type,
-                'checkout_package_id' => $value->checkout_package->transaction_number,
+                'user' => $value->user->username,
+                'trip_packages' => $value->trip_package->type,
+                'checkout_package' => $value->checkout_package->transaction_number,
                 ];
             }
              return $response->Response("Success", $dataTransform, 200);

@@ -25,11 +25,11 @@ class DestinationController extends Controller
             $imageContent = Storage::get($value->image);
                $dataTransform[] = [
                     "id" => $value->id,
-                    "user_id" => $value->user->username,
-                    "tag_id" => $value->tag->name,
-                    "country_id" => $value->country->name,
-                    "city_id" => $value->city->name,
-                    "province_id" => $value->province->name,
+                    "user" => $value->user->username,
+                    "tag" => $value->tag->name,
+                    "country" => $value->country->name,
+                    "city" => $value->city->name,
+                    "province" => $value->province->name,
                     "destination_name" => $value->destination_name,
                     "image" => base64_encode($imageContent),
                     "price" => $value->price,
@@ -81,11 +81,11 @@ class DestinationController extends Controller
             } else {
                 $imageContent = Storage::get($checkData->image);
                 $destination = [
-                'user_id' => $checkData->user_id,
-                'tag_id' => $checkData->tag_id,
-                'country_id' => $checkData->country_id,
-                'city_id' => $checkData->city_id,
-                'province_id' => $checkData->province_id,
+                'user' => $checkData->user_id,
+                'tag' => $checkData->tag_id,
+                'country' => $checkData->country_id,
+                'city' => $checkData->city_id,
+                'province' => $checkData->province_id,
                 'destination_name' => $checkData->destination_name,
                 'image' => base64_encode($imageContent),
                 'price' => $checkData->price,
