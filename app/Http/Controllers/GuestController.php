@@ -310,10 +310,11 @@ class GuestController extends Controller
             foreach ($data as $key => $value) {
                 $popularData = Palace::where('id', $value->palace_id)->get();
                 foreach ($popularData as $key => $valuetwo) {
+                    $imageContent = Storage::get($valuetwo->image);
                      $dataTransform[] = [
                     "id" => $valuetwo->id,
                     "destination" => $valuetwo->palace_name,
-                    "image" => $valuetwo->image,
+                    "image" => base64_encode($imageContent),
                     "tag" => $valuetwo->tag->name,
                     "country" => $valuetwo->country->name,
                     "province" => $valuetwo->province->name,
@@ -340,10 +341,11 @@ class GuestController extends Controller
             foreach ($data as $key => $value) {
                 $popularData = TripPackage::where('id', $value->trip_package_id)->get();
                 foreach ($popularData as $key => $valuetwo) {
+                    $imageContent = Storage::get($valuetwo->destination->image);
                      $dataTransform[] = [
                     "id" => $valuetwo->id,
                     "destination" => $valuetwo->destination->destination_name,
-                    "image" => $valuetwo->destination->image,
+                    "image" => base64_encode($imageContent),
                     "tag" => $valuetwo->destination->tag->name,
                     "country" => $valuetwo->destination->country->name,
                     "province" => $valuetwo->destination->province->name,
