@@ -22,7 +22,7 @@ class IsAdmin
     {
         if (Auth::user() && Auth::user()->level == 'admin') {
             $tokenUser = User::where('id', Auth::user()->id)->pluck('token');
-            if (true) {
+            if (Auth::user()->token == $tokenUser[0]) {
                 return $next($request);
             } else {
                 return response()->json([

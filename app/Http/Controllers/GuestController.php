@@ -16,6 +16,7 @@ use App\Models\TripPackage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Module\imageCompress\ImageCompress;
 
 class GuestController extends Controller
 {
@@ -25,7 +26,8 @@ class GuestController extends Controller
         try {
             $data = Palace::with('user', 'tag', 'country', 'city', 'province')->get();
             foreach ($data as $key => $value) {
-                $imageContent = Storage::get($value->image);
+                $compress = new ImageCompress();
+                $image = $compress->getImage($value->image);
                 $dataTransform[] = [
                     "id" => $value->id,
                     "tag" => $value->tag->name,
@@ -33,7 +35,7 @@ class GuestController extends Controller
                     "city" => $value->city->name,
                     "province" => $value->province->name,
                     "palace_name" => $value->palace_name,
-                    "image" => base64_encode($imageContent),
+                    "image" => $image,
                 ];
             }
             return $response->Response("success", $dataTransform, 200);
@@ -50,13 +52,15 @@ class GuestController extends Controller
         $totalShow = count($show);
         $allImages = InstantTravelModel::where("palace_id", $id)->pluck('image');
             foreach ($allImages as $key => $value) {
-                 $imageContent = Storage::get($value);
+                  $compress = new ImageCompress();
+                $image = $compress->getImage($value);
                 $dataTransform[] = [
-                "image" => base64_encode($imageContent)
+                "image" => $image
                 ];
             }
         if (!$checkData == []) {
-            $imageContent = Storage::get($checkData->image);
+            $compress = new ImageCompress();
+            $image = $compress->getImage($value->image);
 
             $setData = [
                 "id" => $checkData->id,
@@ -65,7 +69,7 @@ class GuestController extends Controller
                 "city" => $checkData->city->name,
                 "province" => $checkData->province->name,
                 "palace_name" => $checkData->palace_name,
-                "image" => base64_encode($imageContent),
+                "image" => $image,
                 "price" => $checkData->price,
                 "description" => $checkData->description,
                 "review" => $totalShow,
@@ -100,7 +104,8 @@ class GuestController extends Controller
                         $paxAvailable = 0;
                     }
                 }
-                $imageContent = Storage::get($value->destination->image);
+                $compress = new ImageCompress();
+                $image = $compress->getImage($value->destination->image);
                 $dataTransform[] = [
                     "id" => $value->id,
                     "type" => $value->type,
@@ -110,7 +115,7 @@ class GuestController extends Controller
                         "country" => $value->destination->country->name,
                         "city" => $value->destination->city->name,
                         "province" => $value->destination->province->name,
-                        "image" => base64_encode($imageContent),
+                        "image" => $image,
                         "destination_name" => $value->destination->destination_name,
                     ],
                 ];
@@ -142,7 +147,8 @@ class GuestController extends Controller
                         $paxAvailable = 0;
                     }
                 }
-                $imageContent = Storage::get($value->destination->image);
+                $compress = new ImageCompress();
+                $image = $compress->getImage($value->destination->image);
                 $dataTransform[] = [
                     "id" => $value->id,
                     "type" => $value->type,
@@ -152,7 +158,7 @@ class GuestController extends Controller
                         "country" => $value->destination->country->name,
                         "city" => $value->destination->city->name,
                         "province" => $value->destination->province->name,
-                        "image" => base64_encode($imageContent),
+                        "image" => $image,
                         "destination_name" => $value->destination->destination_name,
                     ],
                 ];
@@ -169,7 +175,8 @@ class GuestController extends Controller
         try {
             $data = TripPackage::where('type', 'private')->get();
             foreach ($data as $key => $value) {
-                $imageContent = Storage::get($value->destination->image);
+               $compress = new ImageCompress();
+                $image = $compress->getImage($value->destination->image);
                 $dataTransform[] = [
                     "id" => $value->id,
                     "type" => $value->type,
@@ -178,7 +185,7 @@ class GuestController extends Controller
                         "country" => $value->destination->country->name,
                         "city" => $value->destination->city->name,
                         "province" => $value->destination->province->name,
-                        "image" => base64_encode($imageContent),
+                        "image" => $image,
                         "destination_name" => $value->destination->destination_name,
                     ],
                 ];
@@ -194,16 +201,17 @@ class GuestController extends Controller
     public function privatePackageDestinationDetail($id)
     {
         $response = new Responses();
+        $compress = new ImageCompress();
         $checkData  = TripPackage::find($id);
         $show = Checkout_package_travel_sumary::where('trip_package_id', $checkData->id)->get();
         $totalShow = count($show);
         if (!$checkData == []) {
-            $imageContent = Storage::get($checkData->destination->image);
+            $image = $compress->getImage($checkData->destination->image);
             $allImages = Destination_detail::where('destination_id', $checkData->destination_id)->pluck('image');
             foreach ($allImages as $key => $value) {
-                $imageContent = Storage::get($value);
+                $allImage = $compress->getImage($value);
                 $dataTransform[] = [
-                "image" => base64_encode($imageContent)
+                "image" => $allImage
                 ];
             }
 
@@ -220,7 +228,7 @@ class GuestController extends Controller
                     "country" => $checkData->destination->country->name,
                     "city" => $checkData->destination->city->name,
                     "province" => $checkData->destination->province->name,
-                    "image" => base64_encode($imageContent),
+                    "image" => $image,
                     "destination_name" => $checkData->destination->destination_name,
                     "description" => $checkData->destination->description,
                     "all_image" => $dataTransform
@@ -238,11 +246,12 @@ class GuestController extends Controller
     public function openPackageDestinationDetail($id)
     {
         $response = new Responses();
+         $compress = new ImageCompress();
         $checkData  = TripPackage::find($id);
         $show = Checkout_package_travel_sumary::where('trip_package_id', $checkData->id)->get();
         $totalShow = count($show);
         if (!$checkData == []) {
-            $imageContent = Storage::get($checkData->destination->image);
+             $image = $compress->getImage($checkData->destination->image);
             $travelerPackage = DetailPackage::where("trip_packages_id", $checkData->id)->get();
             $count = count($travelerPackage);
             if ($count == 0) {
@@ -261,9 +270,9 @@ class GuestController extends Controller
             }
             $allImages = Destination_detail::where('destination_id', $checkData->destination_id)->pluck('image');
             foreach ($allImages as $key => $value) {
-                 $imageContent = Storage::get($value);
+                 $allImage = $compress->getImage($value);
                 $dataTransform[] = [
-                "image" => base64_encode($imageContent)
+                "image" => $allImage
                 ];
             }
 
@@ -281,7 +290,7 @@ class GuestController extends Controller
                     "country" => $checkData->destination->country->name,
                     "city" => $checkData->destination->city->name,
                     "province" => $checkData->destination->province->name,
-                    "image" => base64_encode($imageContent),
+                    "image" => $image,
                     "destination_name" => $checkData->destination->destination_name,
                     "description" => $checkData->destination->description,
                     "all_image" => $dataTransform,
@@ -300,6 +309,7 @@ class GuestController extends Controller
     public function popularDestination()
     {
         $response = new Responses();
+        $compress = new ImageCompress();
         try {
             $data = DB::table('checkout_instant_travel_sumaries')
                 ->select('palace_id', DB::raw('COUNT(*) as total'))
@@ -310,11 +320,11 @@ class GuestController extends Controller
             foreach ($data as $key => $value) {
                 $popularData = Palace::where('id', $value->palace_id)->get();
                 foreach ($popularData as $key => $valuetwo) {
-                    $imageContent = Storage::get($valuetwo->image);
+                    $image = $compress->getImage($valuetwo->image);
                      $dataTransform[] = [
                     "id" => $valuetwo->id,
                     "palace_name" => $valuetwo->palace_name,
-                    "image" => base64_encode($imageContent),
+                    "image" => $image,
                     "tag" => $valuetwo->tag->name,
                     "country" => $valuetwo->country->name,
                     "province" => $valuetwo->province->name,
@@ -341,11 +351,12 @@ class GuestController extends Controller
             foreach ($data as $key => $value) {
                 $popularData = TripPackage::where('id', $value->trip_package_id)->get();
                 foreach ($popularData as $key => $valuetwo) {
-                    $imageContent = Storage::get($valuetwo->destination->image);
+                    $compress = new ImageCompress();
+                    $image = $compress->getImage($valuetwo->destination->image);
                      $dataTransform[] = [
                     "id" => $valuetwo->id,
                     "destination_name" => $valuetwo->destination->destination_name,
-                    "image" => base64_encode($imageContent),
+                    "image" => $image,
                     "tag" => $valuetwo->destination->tag->name,
                     "country" => $valuetwo->destination->country->name,
                     "province" => $valuetwo->destination->province->name,
