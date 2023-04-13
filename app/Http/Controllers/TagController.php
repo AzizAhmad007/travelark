@@ -14,7 +14,7 @@ class TagController extends Controller
     }
     public function index()
     {
-        $response = new Responses;
+        $response = new Responses();
         try {
             $data = Tag::all();
             return $response->Response("success", $data, 200);

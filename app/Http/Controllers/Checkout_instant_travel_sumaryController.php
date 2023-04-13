@@ -20,7 +20,7 @@ class Checkout_instant_travel_sumaryController extends Controller
     }
     public function index()
     {
-        $response = new Responses;
+        $response = new Responses();
         try {
             $data = Checkout_instant_travel_sumary::all();
         foreach ($data as $key => $value) {
@@ -55,7 +55,7 @@ class Checkout_instant_travel_sumaryController extends Controller
 
     public function store(Request $request)
     {
-        $response = new Responses;
+        $response = new Responses();
         try {
             $checkout_instant_travel_sumary = $request->validate([
                 'user_id' => 'required|numeric',
@@ -102,7 +102,7 @@ class Checkout_instant_travel_sumaryController extends Controller
 
     public function show($id)
     {
-        $response = new Responses;
+        $response = new Responses();
         try {
             $checkdata = Checkout_instant_travel_sumary::find($id);
             if ($checkdata == null || $checkdata == []) {
@@ -140,7 +140,7 @@ class Checkout_instant_travel_sumaryController extends Controller
 
     public function update(Request $request, $id)
     {
-        $response = new Responses;
+        $response = new Responses();
         try{
             $checkout_instant_travel_sumary = $request->validate([
                 'user_id' => 'required|numeric',
@@ -177,7 +177,7 @@ class Checkout_instant_travel_sumaryController extends Controller
 
     public function destroy($id)
     {
-        $response = new Responses;
+        $response = new Responses();
         try {
             $checkout_instant_travel_sumary = Checkout_instant_travel_sumary::find($id);
             if ($checkout_instant_travel_sumary == null) {

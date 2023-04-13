@@ -15,7 +15,7 @@ class TicketController extends Controller
     }
     public function index()
     {
-       $response = new Responses;
+       $response = new Responses();
         try {
             $data = Ticket::all();
             return $response->Response("success", $data, 200);
@@ -26,7 +26,7 @@ class TicketController extends Controller
 
     public function show($id)
     {
-        $response = new Responses;
+        $response = new Responses();
         $ticket = Ticket::find($id);
         if ($ticket == null || $ticket === []) {
             return $response->Response("Data Not Found", null, 404);
@@ -36,7 +36,7 @@ class TicketController extends Controller
     }
     public function delete($id)
     {
-        $response = new Responses;
+        $response = new Responses();
         try {
             $getData = Ticket::find($id);
             Ticket::where('id', $id)->delete();

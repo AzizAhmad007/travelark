@@ -14,7 +14,7 @@ class ProvinceController extends Controller
     }
     public function getProvince()
     {
-        $response = new Responses;
+        $response = new Responses();
         try {
             $data = Province::all();
             return $response->Response("success", $data, 200);

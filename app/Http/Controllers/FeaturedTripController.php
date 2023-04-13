@@ -14,7 +14,7 @@ class FeaturedTripController extends Controller
     }
      public function index()
     {
-         $response = new Responses;
+         $response = new Responses();
         try {
             $data = FeaturedTrip::with('trip_package')->get();
             foreach ($data as $key => $value) {
@@ -33,7 +33,7 @@ class FeaturedTripController extends Controller
 
     public function store(Request $request)
     {
-        $response = new Responses;
+        $response = new Responses();
         try {
             $isValidateData = $request->validate([
                 "name" => 'required|min:3|max:100',
@@ -48,7 +48,7 @@ class FeaturedTripController extends Controller
 
      public function update(Request $request, $id)
     {
-        $response = new Responses;
+        $response = new Responses();
         try {
             $isValidateData = $request->validate([
                 "name" => 'required|min:3|max:100',
@@ -66,7 +66,7 @@ class FeaturedTripController extends Controller
 
      public function destroy($id)
     {
-         $response = new Responses;
+         $response = new Responses();
         try {
             $getData = FeaturedTrip::find($id);
             FeaturedTrip::where('id', $id)->delete();

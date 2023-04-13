@@ -19,7 +19,7 @@ class Checkout_package_travel_sumaryController extends Controller
 
     public function index()
     {
-        $response = new Responses;
+        $response = new Responses();
         try {
             $data = Checkout_package_travel_sumary::all();
         foreach ($data as $key => $value) {
@@ -54,7 +54,7 @@ class Checkout_package_travel_sumaryController extends Controller
 
     public function store(Request $request)
     {
-        $response = new Responses;
+        $response = new Responses();
         try {
             $data = $request->validate([
                 'user_id' => 'required|numeric',
@@ -117,7 +117,7 @@ class Checkout_package_travel_sumaryController extends Controller
     }
     public function show($id)
     {
-        $response = new Responses;
+        $response = new Responses();
         $data = Checkout_package_travel_sumary::find($id);
         if ($data === null || $data === []) {
            return $response->Response("Data Not Found", null, 404);
@@ -148,7 +148,7 @@ class Checkout_package_travel_sumaryController extends Controller
     }
     public function update(Request $request, $id)
     {
-        $response = new Responses;
+        $response = new Responses();
         try {
             $request->validate([
                 'user_id' => 'required|numeric',
@@ -182,7 +182,7 @@ class Checkout_package_travel_sumaryController extends Controller
 
     public function delete($id)
     {
-        $response = new Responses;
+        $response = new Responses();
         try {
             $data = Checkout_package_travel_sumary::find($id);
             $data->delete();

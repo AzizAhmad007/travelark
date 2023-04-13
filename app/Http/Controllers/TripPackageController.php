@@ -20,7 +20,7 @@ class TripPackageController extends Controller
      */
     public function index()
     {
-        $response = new Responses;
+        $response = new Responses();
         try {
             $data = TripPackage::with('user', 'destination', 'guide')->get();
             foreach ($data as $key => $value) {
@@ -61,7 +61,7 @@ class TripPackageController extends Controller
      */
     public function store(StoreTripPackageRequest $request)
     {
-         $response = new Responses;
+         $response = new Responses();
         try {
             $isValidateData = $request->validate([
                 "created_by" => 'required|numeric',
@@ -88,7 +88,7 @@ class TripPackageController extends Controller
      */
     public function show($id)
     {
-        $response = new Responses;
+        $response = new Responses();
          $checkData  = TripPackage::find($id);
         if (!$checkData == []) {
             $setData = [
@@ -128,7 +128,7 @@ class TripPackageController extends Controller
      */
     public function update(UpdateTripPackageRequest $request, $id)
     {
-        $response = new Responses;
+        $response = new Responses();
         try {
             $isValidateData = $request->validate([
                "created_by" => 'required|numeric',
@@ -164,7 +164,7 @@ class TripPackageController extends Controller
      */
     public function destroy($id)
     {
-         $response = new Responses;
+         $response = new Responses();
          try {
             $getData = TripPackage::find($id);
             TripPackage::where('id', $id)->delete();
