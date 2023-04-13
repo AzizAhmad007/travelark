@@ -22,7 +22,7 @@ class IsTraveler
     {
         if (Auth::user() && Auth::user()->level == 'traveler') {
             $tokenUser = User::where('id', Auth::user()->id)->pluck('token');
-            if (Auth::user()->token === $tokenUser[0]) {
+            if (Auth::user()->token == $tokenUser[0]) {
                 return $next($request);
             } else {
                 return response()->json([

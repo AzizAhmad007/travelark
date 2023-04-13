@@ -1,13 +1,17 @@
-<?php
+<?php 
 
 namespace Module\imageCompress;
-
-class ImageCompress
-{
+use Illuminate\Support\Str;
+class ImageCompress{
     public function compress($fileName)
     {
         list($orig_width, $orig_height) = getimagesize($fileName);
-        $extension = $fileName->getClientOriginalExtension();
+       $extension = $fileName->getClientOriginalExtension();
+        // $spliiter = explode(".",$fileName);
+        // foreach($spliiter as $s){
+        //     $extension = $s;
+        // }
+        // $extension = strtolower($extension);
         $width = $orig_width;
         $height = $orig_height;
         $max_width = 300;
@@ -66,5 +70,32 @@ class ImageCompress
         } else {
             return false;
         }
+    }
+
+    public function store($imagePath, $imageCreateFromSomething)
+    {
+        if(!$imageCreateFromSomething) 
+            {
+                return "noimage";
+            }
+        $fileName=Str::random(20);
+        $path = "$imagePath".$fileName.".jpg";
+        $pathData = public_path($path);
+        imagepng($imageCreateFromSomething,$pathData);
+        imagedestroy($imageCreateFromSomething);
+        return "public/$imagePath$fileName.jpg";
+    }
+
+    public function getImage($image)
+    {
+        if(!is_string($image))
+        foreach ($image as $key => $value) {
+            $dataTransform[] = [
+                base64_encode(url($value))
+            ];
+        }else {
+            $dataTransform = base64_encode(url($image));
+        }
+        return $dataTransform;
     }
 }

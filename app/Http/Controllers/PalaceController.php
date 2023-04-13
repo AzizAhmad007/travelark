@@ -21,7 +21,8 @@ class PalaceController extends Controller
         try {
             $data = Palace::with('user', 'tag', 'country', 'city', 'province')->get();
             foreach ($data as $key => $value) {
-                $imageContent = Storage::get($value->image);
+                $compress = new ImageCompress();
+                $image = $compress->getImage($value->image);
                 $dataTransform[] = [
                     "id" => $value->id,
                     "user" => $value->user->username,
@@ -30,7 +31,7 @@ class PalaceController extends Controller
                     "city" => $value->city->name,
                     "province" => $value->province->name,
                     "palace_name" => $value->palace_name,
-                    "image" => base64_encode($imageContent),
+                    "image" => $image,
                     "price" => $value->price,
                     "description" => $value->description,
                 ];
@@ -56,12 +57,10 @@ class PalaceController extends Controller
                 "description" => 'required|min:2',
             ]);
             $image = $request->file('image');
-            // $compress = new ImageCompress;
-            // $imageAfterCompress = $compress->compress($image);
-            // $path = Storage::putFile('public/palaces', $imageAfterCompress);
-            $path = $image->store('public/palaces');
-            $isValidateData['image'] = $path;
-            $isValidateData['image'] = $path;
+            $compress = new ImageCompress();
+            $imageAfterCompress = $compress->compress($image);
+            $imeg = $compress->store("storage/palaces/",$imageAfterCompress);
+            $isValidateData['image'] = $imeg;
             Palace::create($isValidateData);
             return $response->Response("success", $isValidateData, 200);
         } catch (\Throwable $th) {
@@ -85,20 +84,20 @@ class PalaceController extends Controller
             ]);
              $getData = Palace::find($id);
             $setImage = $request->file('image');
-            $compress = new ImageCompress;
+            $compress = new ImageCompress();
             $imageAfterCompress = $compress->compress($setImage);
-            $pathUpdate = Storage::putFile('public/palaces', $imageAfterCompress);
+            $imeg = $compress->store("storage/palaces/",$imageAfterCompress);
             // $pathUpdate = $setImage->store('public/palaces');
             $path = $getData->image;
-            Storage::delete($path);
-            
+            unlink($path);
+
             $getData->user_id = $isValidateData["user_id"];
             $getData->tag_id = $isValidateData["tag_id"];
             $getData->country_id = $isValidateData["country_id"];
             $getData->city_id = $isValidateData["city_id"];
             $getData->province_id = $isValidateData["province_id"];         
             $getData->palace_name = $isValidateData["palace_name"];
-            $getData->image =  $pathUpdate;
+            $getData->image =  $imeg;
             $getData->price = $isValidateData["price"];
             $getData->description = $isValidateData["description"];
             $getData->save();
@@ -115,7 +114,7 @@ class PalaceController extends Controller
             $getData = Palace::find($id);
             Palace::where('id', $id)->delete();
              $path = $getData->image;
-            Storage::delete($path);
+            unlink($path);
            return $response->Response("success", $getData, 200);
         } catch (\Throwable $th) {
            return $response->Response($th->getMessage(), null, 400);
@@ -127,8 +126,8 @@ class PalaceController extends Controller
         $response = new Responses();
         $checkData  = Palace::find($id);
         if (!$checkData == []) {
-            $imageContent = Storage::get($checkData->image);
-            
+            $compress = new ImageCompress();
+            $image = $compress->getImage($checkData->image);
             $setData = [
                 "id" => $checkData->id,
                 "user" => $checkData->user->username,
@@ -137,7 +136,7 @@ class PalaceController extends Controller
                 "city" => $checkData->city->name,
                 "province" => $checkData->province->name,
                 "palace_name" => $checkData->palace_name,
-                "image" => base64_encode($imageContent),
+                "image" => $image,
                 "price" => $checkData->price,
                 "description" => $checkData->description,
             ];

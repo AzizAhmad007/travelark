@@ -14,5 +14,10 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    $exists = public_path('/storage/palaces');
+    if(file_exists($exists)){
+        return "YEAY ITS WORK";
+    }else{
+        return "NO WORK";
+    }
 });
