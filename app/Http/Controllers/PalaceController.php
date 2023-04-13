@@ -7,6 +7,7 @@ use App\Models\Palace;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Module\imageCompress\ImageCompress;
 
 class PalaceController extends Controller
 {
@@ -16,7 +17,7 @@ class PalaceController extends Controller
     }
     public function index()
     {
-        $response = new Responses;
+        $response = new Responses();
         try {
             $data = Palace::with('user', 'tag', 'country', 'city', 'province')->get();
             foreach ($data as $key => $value) {
@@ -41,7 +42,7 @@ class PalaceController extends Controller
     }
     public function store(Request $request)
     {
-         $response = new Responses;
+         $response = new Responses();
         try {
             $isValidateData = $request->validate([
                 "user_id" => 'required|numeric',
@@ -55,7 +56,11 @@ class PalaceController extends Controller
                 "description" => 'required|min:2',
             ]);
             $image = $request->file('image');
+            // $compress = new ImageCompress;
+            // $imageAfterCompress = $compress->compress($image);
+            // $path = Storage::putFile('public/palaces', $imageAfterCompress);
             $path = $image->store('public/palaces');
+            $isValidateData['image'] = $path;
             $isValidateData['image'] = $path;
             Palace::create($isValidateData);
             return $response->Response("success", $isValidateData, 200);
@@ -66,7 +71,7 @@ class PalaceController extends Controller
 
     public function update(Request $request, $id)
     {
-        $response = new Responses;
+        $response = new Responses();
         try {
             $isValidateData = $request->validate([
                 "user_id" => 'required|numeric',
@@ -75,13 +80,15 @@ class PalaceController extends Controller
                 "city_id" => 'required|numeric',
                 "province_id" => 'required|numeric',
                 "palace_name" => 'required|min:3|max:100',
-                "image" => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
                 "price" => 'required||numeric',
                 "description" => 'required|min:2',
             ]);
              $getData = Palace::find($id);
             $setImage = $request->file('image');
-            $pathUpdate = $setImage->store('public/palaces');
+            $compress = new ImageCompress;
+            $imageAfterCompress = $compress->compress($setImage);
+            $pathUpdate = Storage::putFile('public/palaces', $imageAfterCompress);
+            // $pathUpdate = $setImage->store('public/palaces');
             $path = $getData->image;
             Storage::delete($path);
             
@@ -103,7 +110,7 @@ class PalaceController extends Controller
 
     public function delete($id)
     {
-        $response = new Responses;
+        $response = new Responses();
         try {
             $getData = Palace::find($id);
             Palace::where('id', $id)->delete();
@@ -117,7 +124,7 @@ class PalaceController extends Controller
 
     public function show($id)
     {
-        $response = new Responses;
+        $response = new Responses();
         $checkData  = Palace::find($id);
         if (!$checkData == []) {
             $imageContent = Storage::get($checkData->image);

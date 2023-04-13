@@ -66,7 +66,7 @@ Route::group([
     Route::get('palace', [PalaceController::class, 'index']);
     Route::get('detail-palace/{id}', [PalaceController::class, 'show']);
     Route::post('update-palace/{id}', [PalaceController::class, 'update']);
-    Route::delete('palace/{id}', [PalaceController::class, 'delete']);
+    Route::delete('delete-palace/{id}', [PalaceController::class, 'delete']);
 });
 Route::group([
     'middleware' => 'IsAdmin',

@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\User;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -20,7 +21,16 @@ class IsAdmin
     public function handle(Request $request, Closure $next)
     {
         if (Auth::user() && Auth::user()->level == 'admin') {
-            return $next($request);
+            $tokenUser = User::where('id', Auth::user()->id)->pluck('token');
+            if (true) {
+                return $next($request);
+            } else {
+                return response()->json([
+                    'message' => 'Token Invalid!',
+                    'statusCode' => 401,
+                    'data' => null
+                ]);
+            }
         }
         return response()->json([
             'message' => 'Forbiden, Cannot Access!',

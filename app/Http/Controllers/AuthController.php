@@ -23,7 +23,7 @@ class AuthController extends Controller
 
     public function register()
     {
-        $response = new Responses;
+        $response = new Responses();
         $validator = Validator::make(request()->all(), [
             'username' => 'required|unique:users',
             'email' => 'required|email|unique:users',
@@ -57,7 +57,7 @@ class AuthController extends Controller
      */
     public function login()
     {
-        $response = new Responses;
+        $response = new Responses();
         $credentials = request(['username', 'password']);
         try {
             if (!$token = auth()->attempt($credentials)) {

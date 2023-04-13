@@ -18,7 +18,7 @@ class Destination_detailController extends Controller
     }
     public function index()
     {
-        $response = new Responses;
+        $response = new Responses();
         try {
             $data = Destination_detail::with('destination')->get();
             foreach ($data as $key => $value) {
@@ -39,7 +39,7 @@ class Destination_detailController extends Controller
 
     public function show($id)
     {
-        $response = new Responses;
+        $response = new Responses();
         $destination_detail = Destination_detail::find($id);
         if ($destination_detail == null || $destination_detail === []) {
             return $response->Response("Data Not Found", null, 404);
@@ -57,7 +57,7 @@ class Destination_detailController extends Controller
 
     public function store(Request $request)
     {
-        $response = new Responses;
+        $response = new Responses();
         try {
             $destination_detail = $request->validate([
                 'name' => 'required|min:3|max:100',
@@ -76,7 +76,7 @@ class Destination_detailController extends Controller
 
     public function update(Request $request, $id)
     {
-        $response = new Responses;
+        $response = new Responses();
         try {
             $isValidate = $request->validate([
                 'name' => 'required|min:3|max:100',
@@ -102,7 +102,7 @@ class Destination_detailController extends Controller
 
     public function destroy($id)
     {
-        $response = new Responses;
+        $response = new Responses();
         try {
             $destination_detail = Destination_detail::find($id);
             if ($destination_detail == null) {

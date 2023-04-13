@@ -21,7 +21,7 @@ class GuestController extends Controller
 {
     public function getAllInstantTravel()
     {
-        $response = new Responses;
+        $response = new Responses();
         try {
             $data = Palace::with('user', 'tag', 'country', 'city', 'province')->get();
             foreach ($data as $key => $value) {
@@ -44,7 +44,7 @@ class GuestController extends Controller
 
     public function instatTravelDetail($id)
     {
-        $response = new Responses;
+        $response = new Responses();
         $checkData  = Palace::find($id);
         $show = Checkout_instant_travel_sumary::where('palace_id', $checkData->id)->get();
         $totalShow = count($show);
@@ -62,7 +62,7 @@ class GuestController extends Controller
                 "id" => $checkData->id,
                 "tag" => $checkData->tag->name,
                 "country" => $checkData->country->name,
-                "city_id" => $checkData->city->name,
+                "city" => $checkData->city->name,
                 "province" => $checkData->province->name,
                 "palace_name" => $checkData->palace_name,
                 "image" => base64_encode($imageContent),
@@ -80,7 +80,7 @@ class GuestController extends Controller
 
     public function package()
     {
-        $response = new Responses;
+        $response = new Responses();
         try {
             $data = TripPackage::with('user', 'destination', 'guide')->get();
             foreach ($data as $key => $value) {
@@ -122,7 +122,7 @@ class GuestController extends Controller
     }
     public function openPackage()
     {
-        $response = new Responses;
+        $response = new Responses();
         try {
             $data = TripPackage::where('type', 'open')->get();
             foreach ($data as $key => $value) {
@@ -165,7 +165,7 @@ class GuestController extends Controller
 
     public function privatepackage()
     {
-        $response = new Responses;
+        $response = new Responses();
         try {
             $data = TripPackage::where('type', 'private')->get();
             foreach ($data as $key => $value) {
@@ -193,7 +193,7 @@ class GuestController extends Controller
 
     public function privatePackageDestinationDetail($id)
     {
-        $response = new Responses;
+        $response = new Responses();
         $checkData  = TripPackage::find($id);
         $show = Checkout_package_travel_sumary::where('trip_package_id', $checkData->id)->get();
         $totalShow = count($show);
@@ -237,7 +237,7 @@ class GuestController extends Controller
     }
     public function openPackageDestinationDetail($id)
     {
-        $response = new Responses;
+        $response = new Responses();
         $checkData  = TripPackage::find($id);
         $show = Checkout_package_travel_sumary::where('trip_package_id', $checkData->id)->get();
         $totalShow = count($show);
@@ -299,7 +299,7 @@ class GuestController extends Controller
 
     public function popularDestination()
     {
-        $response = new Responses;
+        $response = new Responses();
         try {
             $data = DB::table('checkout_instant_travel_sumaries')
                 ->select('palace_id', DB::raw('COUNT(*) as total'))
@@ -313,7 +313,7 @@ class GuestController extends Controller
                     $imageContent = Storage::get($valuetwo->image);
                      $dataTransform[] = [
                     "id" => $valuetwo->id,
-                    "destination" => $valuetwo->palace_name,
+                    "palace_name" => $valuetwo->palace_name,
                     "image" => base64_encode($imageContent),
                     "tag" => $valuetwo->tag->name,
                     "country" => $valuetwo->country->name,
@@ -330,7 +330,7 @@ class GuestController extends Controller
     }
     public function popularPackage()
     {
-        $response = new Responses;
+        $response = new Responses();
         try {
             $data = DB::table('checkout_package_travel_sumaries')
                 ->select('trip_package_id', DB::raw('COUNT(*) as total'))
@@ -344,7 +344,7 @@ class GuestController extends Controller
                     $imageContent = Storage::get($valuetwo->destination->image);
                      $dataTransform[] = [
                     "id" => $valuetwo->id,
-                    "destination" => $valuetwo->destination->destination_name,
+                    "destination_name" => $valuetwo->destination->destination_name,
                     "image" => base64_encode($imageContent),
                     "tag" => $valuetwo->destination->tag->name,
                     "country" => $valuetwo->destination->country->name,
@@ -362,7 +362,7 @@ class GuestController extends Controller
 
     public function ticketStore(Request $request)
     {
-        $response = new Responses;
+        $response = new Responses();
         try {
             $isValidateData = $request->validate([
                 "first_name" => 'required|min:3|max:100',

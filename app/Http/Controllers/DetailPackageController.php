@@ -15,7 +15,7 @@ class DetailPackageController extends Controller
 
     public function index()
     {
-        $response = new Responses;
+        $response = new Responses();
         try {
             $data = DetailPackage::with('user', 'trip_package', 'checkout_package')->get();
             foreach ($data as $key => $value) {
@@ -33,7 +33,7 @@ class DetailPackageController extends Controller
 
     public function store(Request $request)
     {
-        $response = new Responses;
+        $response = new Responses();
         try {
             $data = $request->validate([
                 'user_id'=>'required|numeric',
@@ -51,7 +51,7 @@ class DetailPackageController extends Controller
 
     public function show($id)
     {
-        $response = new Responses;
+        $response = new Responses();
         $data = DetailPackage::find($id);
         if ($data === null || $data === []) {
             return $response->Response("Data Not Found", null, 404);
@@ -62,7 +62,7 @@ class DetailPackageController extends Controller
 
     public function update(Request $request, $id)
     {
-        $response = new Responses;
+        $response = new Responses();
         try {
             $isValidate = $request->validate([
                 'user_id'=>'required|numeric',
@@ -84,7 +84,7 @@ class DetailPackageController extends Controller
 
     public function delete($id)
     {
-        $response = new Responses;
+        $response = new Responses();
         try {
             $data = DetailPackage::find($id);
             $data -> delete();

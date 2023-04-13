@@ -16,7 +16,7 @@ class Instant_travelerController extends Controller
     }
     public function index()
     {
-        $response = new Responses;
+        $response = new Responses();
         try {
             $data = InstantTravelModel::with('user', 'palace')->get();
             foreach ($data as $key => $value) {
@@ -35,7 +35,7 @@ class Instant_travelerController extends Controller
     }
     public function store(Request $request)
     {
-        $response = new Responses;
+        $response = new Responses();
         try {
             $isValidateData = $request->validate([
                 "user_id" => 'required|numeric',
@@ -54,7 +54,7 @@ class Instant_travelerController extends Controller
 
     public function update(Request $request, $id)
     {
-        $response = new Responses;
+        $response = new Responses();
         try {
             $isValidateData = $request->validate([
                 "user_id" => 'required|numeric',
@@ -78,7 +78,7 @@ class Instant_travelerController extends Controller
 
     public function delete($id)
     {
-        $response = new Responses;
+        $response = new Responses();
         try {
             $getData = InstantTravelModel::find($id);
             InstantTravelModel::where('id', $id)->delete();
@@ -92,7 +92,7 @@ class Instant_travelerController extends Controller
 
     public function show($id)
     {
-        $response = new Responses;
+        $response = new Responses();
         $checkData  = InstantTravelModel::find($id);
         if (!$checkData == []) {
              $imageContent = Storage::get($checkData->image);

@@ -20,7 +20,7 @@ class GuideController extends Controller
      */
     public function index()
     {
-        $response = new Responses;
+        $response = new Responses();
         try {
             $data = Guide::all();
             return $response->Response("success", $data, 200);
@@ -47,7 +47,7 @@ class GuideController extends Controller
      */
     public function store(Request $request)
     {
-        $response = new Responses;
+        $response = new Responses();
         try {
             $isValidateData = $request->validate([
                 "name" => 'required|min:3|max:100',
@@ -87,7 +87,7 @@ class GuideController extends Controller
      */
     public function update(Request $request, Guide $guide)
     {
-        $response = new Responses;
+        $response = new Responses();
         try {
             $isValidateData = $request->validate([
                 "name" => 'required|min:3|max:100',
@@ -107,7 +107,7 @@ class GuideController extends Controller
      */
     public function destroy($id)
     {
-        $response = new Responses;
+        $response = new Responses();
         try {
             $getData = Guide::find($id);
             Guide::where('id', $id)->delete();

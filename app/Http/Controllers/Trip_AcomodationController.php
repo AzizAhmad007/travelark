@@ -19,7 +19,7 @@ class Trip_AcomodationController extends Controller
      */
     public function index()
     {
-        $response = new Responses;
+        $response = new Responses();
         try {
             $data = Trip_AcomodationModel::with('trip_package')->get();
             foreach ($data as $key => $value) {
@@ -44,7 +44,7 @@ class Trip_AcomodationController extends Controller
      */
     public function store(Request $request)
     {
-        $response = new Responses;
+        $response = new Responses();
         try {
             $isValidateData = $request->validate([
                 "name" => 'required|min:3|max:100',
@@ -65,7 +65,7 @@ class Trip_AcomodationController extends Controller
      */
     public function show($id)
     {
-         $response = new Responses;
+         $response = new Responses();
         $checkData  = Trip_AcomodationModel::find($id);
         if (!$checkData == []) {
             $setData = [
@@ -88,7 +88,7 @@ class Trip_AcomodationController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $response = new Responses;
+        $response = new Responses();
         try {
             $isValidateData = $request->validate([
                 "name" => 'required|min:3|max:100',
@@ -112,7 +112,7 @@ class Trip_AcomodationController extends Controller
      */
     public function destroy($id)
     {
-         $response = new Responses;
+         $response = new Responses();
         try {
             $getData = Trip_AcomodationModel::find($id);
             Trip_AcomodationModel::where('id', $id)->delete();

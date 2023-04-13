@@ -15,7 +15,7 @@ class CountryController extends Controller
     }
     public function index()
     {
-        $response = new Responses;
+        $response = new Responses();
         try {
             $data = Country::all();
             return $response->Response("success", $data, 200);

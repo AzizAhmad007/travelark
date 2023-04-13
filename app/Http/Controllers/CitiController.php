@@ -21,7 +21,7 @@ class CitiController extends Controller
      */
     public function index()
     {
-        $response = new Responses;
+        $response = new Responses();
         try {
             $data = CitiModel::all();
             return $response->Response("success", $data, 200);
