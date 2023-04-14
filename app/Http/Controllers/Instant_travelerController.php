@@ -7,6 +7,7 @@ use App\Models\InstantTravelModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Module\imageCompress\ImageCompress;
 
 class Instant_travelerController extends Controller
 {
@@ -20,12 +21,13 @@ class Instant_travelerController extends Controller
         try {
             $data = InstantTravelModel::with('user', 'palace')->get();
             foreach ($data as $key => $value) {
-                $imageContent = Storage::get($value->image);
+                $compress = new ImageCompress();
+                $image = $compress->getImage($value->image);
                 $dataTransform[] = [
                     "id" => $value->id,
                     "user" => $value->user->username,
                     "palace" => $value->palace->palace_name,
-                    "image" => base64_encode($imageContent),
+                    "image" => $image,
                 ];
             }
             return $response->Response("success", $dataTransform, 200);
@@ -43,8 +45,10 @@ class Instant_travelerController extends Controller
                 "image" => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             ]);
             $image = $request->file('image');
-            $path = $image->store('public/palaces');
-            $isValidateData['image'] = $path;
+             $compress = new ImageCompress();
+            $imageAfterCompress = $compress->compress($image);
+            $imeg = $compress->store("storage/palaces/",$imageAfterCompress);
+            $isValidateData['image'] = $imeg;
             InstantTravelModel::create($isValidateData);
              return $response->Response("success", $isValidateData, 200);
         } catch (\Throwable $th) {
@@ -63,12 +67,14 @@ class Instant_travelerController extends Controller
             ]);
             $getData = InstantTravelModel::find($id);
              $setImage = $request->file('image');
-            $pathUpdate = $setImage->store('public/palaces');
+           $compress = new ImageCompress();
+            $imageAfterCompress = $compress->compress($setImage);
+            $imeg = $compress->store("storage/palaces/",$imageAfterCompress);
             $path = $getData->image;
-            Storage::delete($path);
+            unlink($path);
             $getData->user_id = $isValidateData["user_id"];
             $getData->palace_id = $isValidateData["palace_id"];
-            $getData->image = $pathUpdate;
+            $getData->image = $imeg;
             $getData->save();
             return $response->Response("success", $isValidateData, 200);
         } catch (\Throwable $th) {
@@ -83,7 +89,7 @@ class Instant_travelerController extends Controller
             $getData = InstantTravelModel::find($id);
             InstantTravelModel::where('id', $id)->delete();
             $path = $getData->image;
-            Storage::delete($path);
+            unlink($path);
             return $response->Response("success", $getData, 200);
         } catch (\Throwable $th) {
             return $response->Response($th->getMessage(), null, 400);
@@ -95,12 +101,13 @@ class Instant_travelerController extends Controller
         $response = new Responses();
         $checkData  = InstantTravelModel::find($id);
         if (!$checkData == []) {
-             $imageContent = Storage::get($checkData->image);
+            $compress = new ImageCompress();
+            $image = $compress->getImage($checkData->image);
             $setData = [
                 "id" => $checkData->id,
                 "user" => $checkData->user->username,
                 "palace" => $checkData->palace->palace_name,
-                "image" => base64_encode($imageContent),
+                "image" => $image,
             ];
             return $response->Response("success", $setData, 200);
         } else {

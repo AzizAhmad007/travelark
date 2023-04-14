@@ -9,6 +9,7 @@ use App\Http\Controllers\Responses\Responses;
 use Exception;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Module\imageCompress\ImageCompress;
 
 class DestinationController extends Controller
 {
@@ -22,7 +23,8 @@ class DestinationController extends Controller
         try {
             $data = Destination::with('user', 'tag', 'country', 'city', 'province')->get();
             foreach ($data as $key => $value) {
-            $imageContent = Storage::get($value->image);
+                $compress = new ImageCompress();
+                $image = $compress->getImage($value->image);
                $dataTransform[] = [
                     "id" => $value->id,
                     "user" => $value->user->username,
@@ -31,7 +33,7 @@ class DestinationController extends Controller
                     "city" => $value->city->name,
                     "province" => $value->province->name,
                     "destination_name" => $value->destination_name,
-                    "image" => base64_encode($imageContent),
+                    "image" => $image,
                     "price" => $value->price,
                     "private_price" => $value->private_price,
                     "description" => $value->description,
@@ -61,8 +63,10 @@ class DestinationController extends Controller
             ]);
 
             $image = $request->file('image');
-            $path = $image->store('public/destinations');
-            $destination['image'] = $path;
+            $compress = new ImageCompress();
+            $imageAfterCompress = $compress->compress($image);
+            $imeg = $compress->store("storage/palaces/",$imageAfterCompress);
+            $destination['image'] = $imeg;
 
             Destination::create($destination);
 
@@ -79,7 +83,8 @@ class DestinationController extends Controller
             if ($checkData === []) {
                  return $response->Response("Data Not Found", null, 400);
             } else {
-                $imageContent = Storage::get($checkData->image);
+                $compress = new ImageCompress();
+                $image = $compress->getImage($checkData->image);
                 $destination = [
                 'user' => $checkData->user_id,
                 'tag' => $checkData->tag_id,
@@ -87,7 +92,7 @@ class DestinationController extends Controller
                 'city' => $checkData->city_id,
                 'province' => $checkData->province_id,
                 'destination_name' => $checkData->destination_name,
-                'image' => base64_encode($imageContent),
+                'image' => $image,
                 'price' => $checkData->price,
                 'description' => $checkData->description,
                 'private_price' => $checkData->private_price
@@ -118,9 +123,11 @@ class DestinationController extends Controller
 
             $destination = Destination::find($id);
             $setImage = $request->file('image');
-            $pathUpdate = $setImage->store('public/destinations');
+            $compress = new ImageCompress();
+            $imageAfterCompress = $compress->compress($setImage);
+            $imeg = $compress->store("storage/palaces/",$imageAfterCompress);
             $path = $destination->image;
-            Storage::delete($path);
+            unlink($path);
             $data = $request->all();
 
             $destination->update([
@@ -130,7 +137,7 @@ class DestinationController extends Controller
                 'city_id' => $request->city_id,
                 'province_id' => $request->province_id,
                 'destination_name' => $request->destination_name,
-                'image' => $pathUpdate,
+                'image' => $imeg,
                 'price' => $request->price,
                 'description' => $request->description,
                 'private_price' => $request->private_price
@@ -152,7 +159,7 @@ class DestinationController extends Controller
             }
 
             $path = $destination->image;
-            Storage::delete($path);
+            unlink($path);
             $destination->delete();
 
             return $response->Response("success", $destination, 200);
