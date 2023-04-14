@@ -9,6 +9,7 @@ use App\Models\Destination;
 use Illuminate\Http\Request;
 use Exception;
 use Illuminate\Support\Facades\Storage;
+use Module\imageCompress\ImageCompress;
 
 class Destination_detailController extends Controller
 {
@@ -22,12 +23,13 @@ class Destination_detailController extends Controller
         try {
             $data = Destination_detail::with('destination')->get();
             foreach ($data as $key => $value) {
-                $imageContent = Storage::get($value->image);
+                $compress = new ImageCompress();
+                $image = $compress->getImage($value->image);
                 $dataTransform[] = [
                     "id" => $value->id,
                     "name" => $value->name,
                     "detination" => $value->destination->destination_name, 
-                    "image" => base64_encode($imageContent),
+                    "image" => $image,
                 ];
             }
              return $response->Response("Success", $dataTransform, 200);
@@ -44,12 +46,13 @@ class Destination_detailController extends Controller
         if ($destination_detail == null || $destination_detail === []) {
             return $response->Response("Data Not Found", null, 404);
         } else {
-            $imageContent = Storage::get($destination_detail->image);
+            $compress = new ImageCompress();
+            $image = $compress->getImage($destination_detail->image);
             $setData = [
                 "id" => $destination_detail->id,
                 "name" => $destination_detail->name,
                 "destination" => $destination_detail->destination->destination_name,
-                "image" => base64_encode($imageContent),
+                "image" => $image,
             ];
             return $response->Response("Success", $setData, 200);
         }
@@ -65,8 +68,10 @@ class Destination_detailController extends Controller
                 "image" => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             ]);
             $image = $request->file('image');
-            $path = $image->store('public/destinations');
-            $destination_detail['image'] = $path;
+             $compress = new ImageCompress();
+            $imageAfterCompress = $compress->compress($image);
+            $imeg = $compress->store("storage/palaces/",$imageAfterCompress);
+            $destination_detail['image'] = $imeg;
             Destination_detail::create($destination_detail);
             return $response->Response("Success", $destination_detail, 200);
         } catch (Exception $e) {
@@ -86,12 +91,14 @@ class Destination_detailController extends Controller
 
             $destination_detail = Destination_detail::find($id);
             $image = $request->file('image');
-            $path = $image->store('public/destinations');
+            $compress = new ImageCompress();
+            $imageAfterCompress = $compress->compress($image);
+            $imeg = $compress->store("storage/palaces/",$imageAfterCompress);
             $pathDelete = $destination_detail->image;
-            Storage::delete($pathDelete);
+            unlink($pathDelete);
             $destination_detail->name = $isValidate["name"];
             $destination_detail->destination_id = $isValidate["destination_id"];
-            $destination_detail->image = $path;
+            $destination_detail->image = $imeg;
             $destination_detail->save();
 
             return $response->Response("Success", $isValidate, 200);
@@ -110,7 +117,7 @@ class Destination_detailController extends Controller
             }
             $destination_detail->delete();
             $path = $destination_detail->image;
-            Storage::delete($path);
+            unlink($path);
 
              return $response->Response("success", $destination_detail, 200);
         } catch (Exception $e) {
