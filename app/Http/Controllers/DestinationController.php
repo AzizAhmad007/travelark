@@ -65,7 +65,7 @@ class DestinationController extends Controller
             $image = $request->file('image');
             $compress = new ImageCompress();
             $imageAfterCompress = $compress->compress($image);
-            $imeg = $compress->store("storage/palaces/",$imageAfterCompress);
+            $imeg = $compress->store("storage/destinations/",$imageAfterCompress);
             $destination['image'] = $imeg;
 
             Destination::create($destination);
@@ -125,7 +125,7 @@ class DestinationController extends Controller
             $setImage = $request->file('image');
             $compress = new ImageCompress();
             $imageAfterCompress = $compress->compress($setImage);
-            $imeg = $compress->store("storage/palaces/",$imageAfterCompress);
+            $imeg = $compress->store("storage/destinations/",$imageAfterCompress);
             $path = $destination->image;
             unlink($path);
             $data = $request->all();

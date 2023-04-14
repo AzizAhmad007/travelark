@@ -70,7 +70,7 @@ class Destination_detailController extends Controller
             $image = $request->file('image');
              $compress = new ImageCompress();
             $imageAfterCompress = $compress->compress($image);
-            $imeg = $compress->store("storage/palaces/",$imageAfterCompress);
+            $imeg = $compress->store("storage/destinations/",$imageAfterCompress);
             $destination_detail['image'] = $imeg;
             Destination_detail::create($destination_detail);
             return $response->Response("Success", $destination_detail, 200);
@@ -93,7 +93,7 @@ class Destination_detailController extends Controller
             $image = $request->file('image');
             $compress = new ImageCompress();
             $imageAfterCompress = $compress->compress($image);
-            $imeg = $compress->store("storage/palaces/",$imageAfterCompress);
+            $imeg = $compress->store("storage/destinations/",$imageAfterCompress);
             $pathDelete = $destination_detail->image;
             unlink($pathDelete);
             $destination_detail->name = $isValidate["name"];
