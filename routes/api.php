@@ -193,14 +193,14 @@ Route::group([
 
    Route::post('insert-checkout-destination', [Checkout_instant_travel_sumaryController::class, 'store'])->middleware("IsTraveler");
    Route::post('insert-checkout-package', [Checkout_package_travel_sumaryController::class, 'store'])->middleware("IsTraveler");
-   Route::put('update-checkout-destination', [Checkout_instant_travel_sumaryController::class, 'update'])->middleware("IsAdmin");
-   Route::put('update-checkout-package', [Checkout_package_travel_sumaryController::class, 'update'])->middleware("IsAdmin");
+   Route::put('update-checkout-destination/{id}', [Checkout_instant_travel_sumaryController::class, 'update'])->middleware("IsAdmin");
+   Route::put('update-checkout-package/{id}', [Checkout_package_travel_sumaryController::class, 'update'])->middleware("IsAdmin");
    Route::get('checkout-destination', [Checkout_instant_travel_sumaryController::class, 'index'])->middleware("IsAdmin");
    Route::get('checkout-package', [Checkout_package_travel_sumaryController::class, 'index'])->middleware("IsAdmin");
-   Route::get('detail-checkout-destination', [Checkout_instant_travel_sumaryController::class, 'show'])->middleware("IsAdmin");
-   Route::get('detail-checkout-package', [Checkout_package_travel_sumaryController::class, 'show'])->middleware("IsAdmin");
-   Route::delete('delete-checkout-destination', [Checkout_instant_travel_sumaryController::class, 'destroy'])->middleware("IsAdmin");
-   Route::delete('delete-checkout-package', [Checkout_package_travel_sumaryController::class, 'delete'])->middleware("IsAdmin");
+   Route::get('detail-checkout-destination/{id}', [Checkout_instant_travel_sumaryController::class, 'show'])->middleware("IsAdmin");
+   Route::get('detail-checkout-package/{id}', [Checkout_package_travel_sumaryController::class, 'show'])->middleware("IsAdmin");
+   Route::delete('delete-checkout-destination/{id}', [Checkout_instant_travel_sumaryController::class, 'destroy'])->middleware("IsAdmin");
+   Route::delete('delete-checkout-package/{id}', [Checkout_package_travel_sumaryController::class, 'delete'])->middleware("IsAdmin");
    
 });
 
